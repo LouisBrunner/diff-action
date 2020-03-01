@@ -41,11 +41,12 @@ export const processDiff = (old: string, newPath: string, mode: Inputs.Mode, exp
     removed: 0,
   };
   diff.forEach(change => {
+    const count = change.count ? change.count : 1;
     if (change.added) {
-      counts.added += 1;
+      counts.added += count;
     }
     if (change.removed) {
-      counts.removed += 1;
+      counts.removed += count;
     }
   });
 

@@ -215,7 +215,7 @@ jobs:
         old: fixtures/file1_basic.txt
         new: fixtures/file4_added.txt
         mode: addition
-        token: ${{ secrets.GITHUB }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         notify_issue: true
         notify_check: true
 
@@ -228,6 +228,6 @@ jobs:
         old: fixtures/file1_basic.txt
         new: fixtures/file2_deleted.txt
         mode: addition
-        token: ${{ secrets.GITHUB }}
+        token: ${{ secrets.GITHUB_TOKEN }}
         notify_issue: true
         notify_check: true
