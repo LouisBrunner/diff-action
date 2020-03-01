@@ -1,10 +1,38 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'GitHub Checks'
+description: 'Wrapper around the GitHub Checks API'
+author: 'Louis Brunner'
+branding:
+  icon: 'check-circle'
+  color: 'green'
 inputs:
-  myInput:              # change this
-    description: 'input description here'
-    default: 'default value if applicable'
+  token:
+    description: 'your GITHUB_TOKEN'
+    required: true
+  name:
+    description: 'the name of your check'
+    required: true
+  conclusion:
+    description: 'the conclusion of your check'
+    required: true
+  status:
+    description: 'the status of your check'
+    required: false
+    default: completed
+  action_url:
+    description: 'the url to call back to when using `action_required` as conclusion or with `actions`'
+    required: false
+  output:
+    description: 'the output of your check'
+    required: false
+  annotations:
+    description: 'the annotations of your check'
+    required: false
+  images:
+    description: 'the images of your check'
+    required: false
+  actions:
+    description: 'the actions of your check'
+    required: false
 runs:
   using: 'node12'
   main: 'dist/index.js'

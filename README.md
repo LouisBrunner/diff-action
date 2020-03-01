@@ -1,101 +1,90 @@
-<p align="center">
-  <a href="https://github.com/actions/typescript-action/actions"><img alt="typescript-action status" src="https://github.com/actions/typescript-action/workflows/build-test/badge.svg"></a>
-</p>
+# GitHub Actions: `checks-action` ![build-test](https://github.com/LouisBrunner/checks-action/workflows/build-test/badge.svg)
 
-# Create a JavaScript Action using TypeScript
+This GitHub Action allows you to create [Check Runs](https://developer.github.com/v3/checks/runs/#create-a-check-run) directly from your GitHub Action workflow. While each job of a workflow already creates a Check Run, this Action allows to include `annotations`, `images`, `actions` or any other parameters supported by the [Check Runs API](https://developer.github.com/v3/checks/runs/#parameters).
 
-Use this template to bootstrap the creation of a JavaScript action.:rocket:
+## Usage
 
-This template includes compilication support, tests, a validation workflow, publishing, and versioning guidance.  
+The following shows how to publish a Check Run which will have the same status as your job and contains the output of another action. This will be shown predominantly in a Pull Request or on the workflow run.
 
-If you are new, there's also a simpler introduction.  See the [Hello World JavaScript Action](https://github.com/actions/hello-world-javascript-action)
+```
+name: "build-test"
+on: [push]
 
-## Create an action from this template
-
-Click the `Use this Template` and provide the new repo details for your action
-
-## Code in Master
-
-Install the dependencies  
-```bash
-$ npm install
+jobs:
+  test_something:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/create-outputs@v0.0.0-fake
+      id: test
+    - uses: LouisBrunner/checks-action@v0.1.0
+      if: always()
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: Test XYZ
+        conclusion: ${{ job }}
+        output:
+          summary: ${{ steps.test.outputs.summary }}
+          text_description: ${{ steps.test.outputs.description }}
 ```
 
-Build the typescript and package it for distribution
-```bash
-$ npm run build && npm run pack
-```
+See the [examples workflow](.github/workflows/examples.yml) for more details and examples (and see the [associated runs](https://github.com/LouisBrunner/checks-action/actions?query=workflow%3Aexamples) to see how it will look like).
 
-Run the tests :heavy_check_mark:  
-```bash
-$ npm test
+## Inputs
 
- PASS  ./index.test.js
-  ✓ throws invalid number (3ms)
-  ✓ wait 500 ms (504ms)
-  ✓ test runs (95ms)
+### `token`
 
-...
-```
+**Required** Your `GITHUB_TOKEN`
 
-## Change action.yml
+### `name`
 
-The action.yml contains defines the inputs and output for your action.
+**Required** The name of your check
 
-Update the action.yml with your name, description, inputs and outputs for your action.
+### `conclusion`
 
-See the [documentation](https://help.github.com/en/articles/metadata-syntax-for-github-actions)
+**Required** The conclusion of your check, can be either `success`, `failure`, `neutral`, `cancelled`, `timed_out` or `action_required`
 
-## Change the Code
+### `status`
 
-Most toolkit and CI/CD operations involve async operations so the action is run in an async function.
+_Optional_ The status of your check, defaults to `completed`, can be either `queued`, `in_progress`, `completed`
 
-```javascript
-import * as core from '@actions/core';
-...
+### `action_url`
 
-async function run() {
-  try { 
-      ...
-  } 
-  catch (error) {
-    core.setFailed(error.message);
-  }
-}
+_Optional_ The URL to call back to when using `action_required` as a `conclusion` of your check or when including `actions`
 
-run()
-```
+See [Check Runs API (`action_required`)](https://developer.github.com/v3/checks/runs/#parameters) or [Check Runs API (`actions`)](https://developer.github.com/v3/checks/runs/#actions-object) for more information
 
-See the [toolkit documentation](https://github.com/actions/toolkit/blob/master/README.md#packages) for the various packages.
+### `output`
 
-## Publish to a distribution branch
+_Optional_ A JSON object (as a string) containing the output of your check, required when using `annotations` or `images`.
 
-Actions are run from GitHub repos so we will checkin the packed dist folder. 
+Supports the following properties:
 
-Then run [ncc](https://github.com/zeit/ncc) and push the results:
-```bash
-$ npm run pack
-$ git add dist
-$ git commit -a -m "prod dependencies"
-$ git push origin releases/v1
-```
+ - `summary`: **Required**, summary of your check
+ - `text_description`: _Optional_, a text description of your annotation (if any)
 
-Your action is now published! :rocket: 
+See [Check Runs API](https://developer.github.com/v3/checks/runs/#output-object) for more information
 
-See the [versioning documentation](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
+### `annotations`
 
-## Validate
+_Optional_ A JSON array (as a string) containing the annotations of your check, requires `output` to be included.
 
-You can now validate the action by referencing `./` in a workflow in your repo (see [test.yml](.github/workflows/test.yml)])
+Supports the same properties with the same types and names as the [Check Runs API](https://developer.github.com/v3/checks/runs/#annotations-object)
 
-```yaml
-uses: ./
-with:
-  milliseconds: 1000
-```
+### `images`
 
-See the [actions tab](https://github.com/actions/javascript-action/actions) for runs of this action! :rocket:
+_Optional_ A JSON array (as a string) containing the images of your check, requires `output` to be included.
 
-## Usage:
+Supports the same properties with the same types and names as the [Check Runs API](https://developer.github.com/v3/checks/runs/#images-object)
 
-After testing you can [create a v1 tag](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md) to reference the stable and latest V1 action
+### `actions`
+
+_Optional_ A JSON array (as a string) containing the actions of your check.
+
+Supports the same properties with the same types and names as the [Check Runs API](https://developer.github.com/v3/checks/runs/#actions-object)
+
+## Issues
+
+ - Action Required conclusion: button doesn't work
+ - Action elements: button doesn't work
+ - Non-completed status: too many arguments required
