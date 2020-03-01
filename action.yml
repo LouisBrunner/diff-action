@@ -11,6 +11,9 @@ inputs:
   new:
     description: 'second file to compare'
     required: true
+  mode:
+    description: 'the mode used to measure the tolerance'
+    required: true
   tolerance:
     description: 'the tolerance used to judge if the diff improved'
     required: false

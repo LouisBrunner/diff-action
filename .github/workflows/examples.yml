@@ -4,17 +4,18 @@ on: [push]
 jobs:
   # make sure the action works on a clean machines without building
 
-  ## Basic
-  test_basic_less:
+  ## Additions
+  test_additions_deleted:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - uses: ./
       with:
         old: fixtures/file1_basic.txt
-        new: fixtures/file2_less.txt
+        new: fixtures/file2_deleted.txt
+        mode: addition
 
-  test_basic_same:
+  test_additions_same:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -22,17 +23,19 @@ jobs:
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file3_same.txt
+        mode: addition
 
-  test_basic_more:
+  test_additions_added:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - uses: ./
       with:
         old: fixtures/file1_basic.txt
-        new: fixtures/file4_more.txt
+        new: fixtures/file4_added.txt
+        mode: addition
 
-  test_basic_mixed:
+  test_additions_mixed:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
@@ -40,34 +43,99 @@ jobs:
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file5_mixed.txt
+        mode: addition
 
-  test_basic_mixed_better:
+  test_additions_mixed_added:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - uses: ./
       with:
         old: fixtures/file1_basic.txt
-        new: fixtures/file6_mixed_better.txt
+        new: fixtures/file6_mixed_added.txt
+        mode: addition
 
-  test_basic_mixed_worse:
+  test_additions_mixed_deleted:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - uses: ./
       with:
         old: fixtures/file1_basic.txt
-        new: fixtures/file7_mixed_worse.txt
+        new: fixtures/file7_mixed_deleted.txt
+        mode: addition
 
-  # Tolerance
-  test_tolerance_less:
+  ## Deletions
+  test_deletions_deleted:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - uses: ./
       with:
         old: fixtures/file1_basic.txt
-        new: fixtures/file2_less.txt
+        new: fixtures/file2_deleted.txt
+        mode: deletion
+
+  test_deletions_same:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file3_same.txt
+        mode: deletion
+
+  test_deletions_added:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file4_added.txt
+        mode: deletion
+
+  test_deletions_mixed:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file5_mixed.txt
+        mode: deletion
+
+  test_deletions_mixed_added:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file6_mixed_added.txt
+        mode: deletion
+
+  test_deletions_mixed_deleted:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file7_mixed_deleted.txt
+        mode: deletion
+
+  # Tolerance (Additions)
+  test_tolerance_deleted:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file2_deleted.txt
+        mode: addition
         tolerance: worse
 
   test_tolerance_same:
@@ -78,16 +146,18 @@ jobs:
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file3_same.txt
+        mode: addition
         tolerance: same
 
-  test_tolerance_more:
+  test_tolerance_added:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - uses: ./
       with:
         old: fixtures/file1_basic.txt
-        new: fixtures/file4_more.txt
+        new: fixtures/file4_added.txt
+        mode: addition
         tolerance: better
 
   test_tolerance_mixed:
@@ -98,26 +168,29 @@ jobs:
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file5_mixed.txt
+        mode: addition
         tolerance: mixed
 
-  test_tolerance_mixed_better:
+  test_tolerance_mixed_added:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - uses: ./
       with:
         old: fixtures/file1_basic.txt
-        new: fixtures/file6_mixed_better.txt
+        new: fixtures/file6_mixed_added.txt
+        mode: addition
         tolerance: mixed-better
 
-  test_tolerance_mixed_worse:
+  test_tolerance_mixed_deleted:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
     - uses: ./
       with:
         old: fixtures/file1_basic.txt
-        new: fixtures/file7_mixed_worse.txt
+        new: fixtures/file7_mixed_deleted.txt
+        mode: addition
         tolerance: mixed-worse
 
   # Outputs
@@ -128,7 +201,8 @@ jobs:
     - uses: ./
       with:
         old: fixtures/file1_basic.txt
-        new: fixtures/file4_more.txt
+        new: fixtures/file4_added.txt
+        mode: addition
         output: out.txt
     - run: cat out.txt
 
@@ -139,7 +213,8 @@ jobs:
     - uses: ./
       with:
         old: fixtures/file1_basic.txt
-        new: fixtures/file4_more.txt
+        new: fixtures/file4_added.txt
+        mode: addition
         token: ${{ secrets.GITHUB }}
         notify_issue: true
         notify_check: true
@@ -151,7 +226,8 @@ jobs:
     - uses: ./
       with:
         old: fixtures/file1_basic.txt
-        new: fixtures/file2_less.txt
+        new: fixtures/file2_deleted.txt
+        mode: addition
         token: ${{ secrets.GITHUB }}
         notify_issue: true
         notify_check: true

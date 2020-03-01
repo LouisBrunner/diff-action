@@ -4,7 +4,7 @@ This GitHub Action allows you to compare two files based on a tolerance, output 
 
 ## Usage
 
-The following shows how to compare two files and output the difference to a file.
+The following shows how to compare two files, making sure only additions happened, and output the difference to a file.
 
 ```
 name: "build-test"
@@ -19,6 +19,7 @@ jobs:
       with:
         old: file1.txt
         new: file2.txt
+        mode: addition
         tolerance: better
         output: out.txt
 ```
@@ -35,9 +36,13 @@ See the [examples workflow](.github/workflows/examples.yml) for more details and
 
 **Required** The second file to compare
 
+### `mode`
+
+**Required** The method used to measure the `tolerance`, can be either `addition` (addition are better) or `deletion` (deletion are better)
+
 ### `tolerance`
 
-**Required** The tolerance to check the diff for, can be either `better` (only deletion), `mixed-better` (more deletion than addition), `same` (stay the exact same), `mixed` (same amount of lines but not the same), `mixed-worse` (more addition than deletion) or `worse` (only addition)
+**Required** The tolerance to check the diff for, depends on `mode`, can be either (examples given with mode = `deletion`) `better` (only deletion), `mixed-better` (more deletion than addition), `same` (stay the exact same), `mixed` (same amount of lines but not the same), `mixed-worse` (more addition than deletion) or `worse` (only addition)
 
 ### `output`
 

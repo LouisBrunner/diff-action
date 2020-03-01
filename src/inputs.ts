@@ -6,8 +6,13 @@ type GetInput = (name: string, options?: InputOptions | undefined) => string;
 export const parseInputs = (getInput: GetInput): Inputs.Args => {
   const old = getInput('old', {required: true});
   const newPath = getInput('new', {required: true});
+  const mode = getInput('mode', {required: true}) as Inputs.Mode;
   const tolerance = getInput('tolerance', {required: true}) as Inputs.Tolerance;
   const output = getInput('output');
+
+  if (!Object.values(Inputs.Mode).includes(mode)) {
+    throw new Error(`invalid value for 'mode': '${mode}'`);
+  }
 
   if (!Object.values(Inputs.Tolerance).includes(tolerance)) {
     throw new Error(`invalid value for 'tolerance': '${tolerance}'`);
@@ -29,6 +34,7 @@ export const parseInputs = (getInput: GetInput): Inputs.Args => {
     old,
     new: newPath,
 
+    mode,
     tolerance,
     output,
 
