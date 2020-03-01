@@ -1,8 +1,8 @@
 {
-  "name": "checks-action",
+  "name": "diff-action",
   "version": "0.1.0",
   "private": true,
-  "description": "GitHub Action which wraps calls to GitHub Checks API",
+  "description": "GitHub Action that compares two files, add tolerances, send notifications, etc",
   "main": "lib/main.js",
   "scripts": {
     "build": "tsc",
@@ -14,12 +14,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/LouisBrunner/checks-action.git"
+    "url": "git+https://github.com/LouisBrunner/diff-action.git"
   },
   "keywords": [
     "github",
     "actions",
-    "checks"
+    "diff"
   ],
   "author": "Louis Brunner",
   "license": "MIT",

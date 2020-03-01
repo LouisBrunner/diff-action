@@ -1,38 +1,37 @@
-name: 'GitHub Checks'
-description: 'Wrapper around the GitHub Checks API'
+name: 'Smart Diff'
+description: 'Perform a diff between two files given a tolerance and send notifications'
 author: 'Louis Brunner'
 branding:
-  icon: 'check-circle'
+  icon: 'plus-square'
   color: 'green'
 inputs:
-  token:
-    description: 'your GITHUB_TOKEN'
+  old:
+    description: 'first file to compare'
     required: true
-  name:
-    description: 'the name of your check'
+  new:
+    description: 'second file to compare'
     required: true
-  conclusion:
-    description: 'the conclusion of your check'
-    required: true
-  status:
-    description: 'the status of your check'
+  tolerance:
+    description: 'the tolerance used to judge if the diff improved'
     required: false
-    default: completed
-  action_url:
-    description: 'the url to call back to when using `action_required` as conclusion or with `actions`'
-    required: false
+    default: 'better'
   output:
-    description: 'the output of your check'
+    description: 'write the diff to the given file'
     required: false
-  annotations:
-    description: 'the annotations of your check'
+  token:
+    description: 'your GITHUB_TOKEN, used when sending notifications'
     required: false
-  images:
-    description: 'the images of your check'
+  notify_issue:
+    description: 'send a notification to the linked issue/pullrequest with the output'
     required: false
-  actions:
-    description: 'the actions of your check'
+  notify_check:
+    description: 'create a check run with the output'
     required: false
+outputs:
+  passed:
+    description: 'boolean describing if the test passed or not'
+  output:
+    description: 'text of the diff'
 runs:
   using: 'node12'
   main: 'dist/index.js'

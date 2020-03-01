@@ -1,10 +1,10 @@
-# GitHub Actions: `checks-action` ![build-test](https://github.com/LouisBrunner/checks-action/workflows/build-test/badge.svg)
+# GitHub Actions: `diff-action` ![build-test](https://github.com/LouisBrunner/diff-action/workflows/build-test/badge.svg)
 
-This GitHub Action allows you to create [Check Runs](https://developer.github.com/v3/checks/runs/#create-a-check-run) directly from your GitHub Action workflow. While each job of a workflow already creates a Check Run, this Action allows to include `annotations`, `images`, `actions` or any other parameters supported by the [Check Runs API](https://developer.github.com/v3/checks/runs/#parameters).
+This GitHub Action allows you to compare two files based on a tolerance, output the result to a file and send various notifications (comment on a linked GitHub issue/pull request, create a [Check Run](https://developer.github.com/v3/checks/runs/#create-a-check-run), ...), etc.
 
 ## Usage
 
-The following shows how to publish a Check Run which will have the same status as your job and contains the output of another action. This will be shown predominantly in a Pull Request or on the workflow run.
+The following shows how to compare two files and output the difference to a file.
 
 ```
 name: "build-test"
@@ -15,76 +15,56 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: actions/create-outputs@v0.0.0-fake
-      id: test
-    - uses: LouisBrunner/checks-action@v0.1.0
-      if: always()
+    - uses: LouisBrunner/diff-action@v0.1.0
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        name: Test XYZ
-        conclusion: ${{ job }}
-        output:
-          summary: ${{ steps.test.outputs.summary }}
-          text_description: ${{ steps.test.outputs.description }}
+        old: file1.txt
+        new: file2.txt
+        tolerance: better
+        output: out.txt
 ```
 
-See the [examples workflow](.github/workflows/examples.yml) for more details and examples (and see the [associated runs](https://github.com/LouisBrunner/checks-action/actions?query=workflow%3Aexamples) to see how it will look like).
+See the [examples workflow](.github/workflows/examples.yml) for more details and examples (and see the [associated runs](https://github.com/LouisBrunner/diff-action/actions?query=workflow%3Aexamples) to see how it will look like).
 
 ## Inputs
 
-### `token`
+### `old`
 
-**Required** Your `GITHUB_TOKEN`
+**Required** The first file to compare
 
-### `name`
+### `new`
 
-**Required** The name of your check
+**Required** The second file to compare
 
-### `conclusion`
+### `tolerance`
 
-**Required** The conclusion of your check, can be either `success`, `failure`, `neutral`, `cancelled`, `timed_out` or `action_required`
-
-### `status`
-
-_Optional_ The status of your check, defaults to `completed`, can be either `queued`, `in_progress`, `completed`
-
-### `action_url`
-
-_Optional_ The URL to call back to when using `action_required` as a `conclusion` of your check or when including `actions`
-
-See [Check Runs API (`action_required`)](https://developer.github.com/v3/checks/runs/#parameters) or [Check Runs API (`actions`)](https://developer.github.com/v3/checks/runs/#actions-object) for more information
+**Required** The tolerance to check the diff for, can be either `better` (only deletion), `mixed-better` (more deletion than addition), `same` (stay the exact same), `mixed` (same amount of lines but not the same), `mixed-worse` (more addition than deletion) or `worse` (only addition)
 
 ### `output`
 
-_Optional_ A JSON object (as a string) containing the output of your check, required when using `annotations` or `images`.
+_Optional_ The path where to output the diff (as well as on the console)
 
-Supports the following properties:
+### `token`
 
- - `summary`: **Required**, summary of your check
- - `text_description`: _Optional_, a text description of your annotation (if any)
+_Optional_ Your `GITHUB_TOKEN`, **required** when using `notify_check` and/or `notify_issue`
 
-See [Check Runs API](https://developer.github.com/v3/checks/runs/#output-object) for more information
+### `notify_check`
 
-### `annotations`
+_Optional_ Will create a [GitHub Check Run](https://developer.github.com/v3/checks/runs/#create-a-check-run) if `'true'` is specified, **requires** `token` to be given as well
 
-_Optional_ A JSON array (as a string) containing the annotations of your check, requires `output` to be included.
+### `notify_issue`
 
-Supports the same properties with the same types and names as the [Check Runs API](https://developer.github.com/v3/checks/runs/#annotations-object)
+_Optional_ Will create a comment in the linked issue if `'true'` is specified, **requires** `token` to be given as well
 
-### `images`
+## Outputs
 
-_Optional_ A JSON array (as a string) containing the images of your check, requires `output` to be included.
+### `passed`
 
-Supports the same properties with the same types and names as the [Check Runs API](https://developer.github.com/v3/checks/runs/#images-object)
+Contains a boolean (`'true'` or `'false'`) representing if the check passed or not
 
-### `actions`
+### `output`
 
-_Optional_ A JSON array (as a string) containing the actions of your check.
-
-Supports the same properties with the same types and names as the [Check Runs API](https://developer.github.com/v3/checks/runs/#actions-object)
+Contains the output of the diff
 
 ## Issues
 
- - Action Required conclusion: button doesn't work
- - Action elements: button doesn't work
- - Non-completed status: too many arguments required
+ - Add a mode for the tolerance so `addition` can be better than `deletion` (which isn't possible now)

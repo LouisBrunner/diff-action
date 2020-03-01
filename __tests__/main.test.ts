@@ -4,11 +4,9 @@ import * as path from 'path';
 
 // shows how the runner will run a javascript action with env / stdout protocol
 test('test runs', () => {
-  process.env['GITHUB_REPOSITORY'] = 'LB/ABC';
-  process.env['INPUT_TOKEN'] = 'ABC';
-  process.env['INPUT_NAME'] = 'ABC';
-  process.env['INPUT_STATUS'] = 'completed';
-  process.env['INPUT_CONCLUSION'] = 'success';
+  process.env['INPUT_OLD'] = path.join(__dirname, '..', 'fixtures', 'file1_basic.txt');
+  process.env['INPUT_NEW'] = path.join(__dirname, '..', 'fixtures', 'file4_more.txt');
+  process.env['INPUT_TOLERANCE'] = 'better';
   const ip = path.join(__dirname, '..', 'lib', 'main.js');
   const options: cp.ExecSyncOptions = {
     env: process.env,

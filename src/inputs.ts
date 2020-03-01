@@ -3,58 +3,35 @@ import * as Inputs from './namespaces/Inputs';
 
 type GetInput = (name: string, options?: InputOptions | undefined) => string;
 
-const parseJSON = <T>(getInput: GetInput, property: string): T | undefined => {
-  const value = getInput(property);
-  if (!value) {
-    return;
-  }
-  try {
-    const obj = JSON.parse(value);
-    return obj as T;
-  } catch (e) {
-    throw new Error(`invalid format for '${property}: ${e.toString()}`);
-  }
-};
-
 export const parseInputs = (getInput: GetInput): Inputs.Args => {
-  const token = getInput('token', {required: true});
-  const name = getInput('name', {required: true});
-  const status = getInput('status', {required: true}) as Inputs.Status;
-  const conclusion = getInput('conclusion', {required: true}).toLowerCase() as Inputs.Conclusion;
-  const actionURL = getInput('action_url');
+  const old = getInput('old', {required: true});
+  const newPath = getInput('new', {required: true});
+  const tolerance = getInput('tolerance', {required: true}) as Inputs.Tolerance;
+  const output = getInput('output');
 
-  if (!Object.values(Inputs.Status).includes(status)) {
-    throw new Error(`invalid value for 'status': '${status}'`);
+  if (!Object.values(Inputs.Tolerance).includes(tolerance)) {
+    throw new Error(`invalid value for 'tolerance': '${tolerance}'`);
   }
 
-  if (!Object.values(Inputs.Conclusion).includes(conclusion)) {
-    throw new Error(`invalid value for 'conclusion': '${conclusion}'`);
-  }
-
-  const output = parseJSON<Inputs.Output>(getInput, 'output');
-  const annotations = parseJSON<Inputs.Annotations>(getInput, 'annotations');
-  const images = parseJSON<Inputs.Images>(getInput, 'images');
-  const actions = parseJSON<Inputs.Actions>(getInput, 'actions');
-
-  if (!actionURL && (conclusion === Inputs.Conclusion.ActionRequired || actions)) {
-    throw new Error(`missing value for 'action_url'`);
-  }
-
-  if ((!output || !output.summary) && (annotations || images)) {
-    throw new Error(`missing value for 'output.summary'`);
+  let notifications;
+  const notify_check = getInput('notify_check');
+  const notify_issue = getInput('notify_issue');
+  if (notify_check || notify_issue) {
+    const token = getInput('token', {required: true});
+    notifications = {
+      token,
+      check: notify_check === 'true',
+      issue: notify_issue === 'true',
+    };
   }
 
   return {
-    name,
-    token,
-    status,
-    conclusion,
+    old,
+    new: newPath,
 
-    actionURL,
-
+    tolerance,
     output,
-    annotations,
-    images,
-    actions,
+
+    notifications,
   };
 };
