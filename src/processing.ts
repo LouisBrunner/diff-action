@@ -13,8 +13,8 @@ type ToleranceLevelMap = Record<Inputs.Tolerance, number>;
 
 const levels: ToleranceLevelMap = {
   [Inputs.Tolerance.Better]: 3,
-  [Inputs.Tolerance.MixedBetter]: 2,
-  [Inputs.Tolerance.Same]: 1,
+  [Inputs.Tolerance.Same]: 2,
+  [Inputs.Tolerance.MixedBetter]: 1,
   [Inputs.Tolerance.Mixed]: -1,
   [Inputs.Tolerance.MixedWorse]: -2,
   [Inputs.Tolerance.Worse]: -3,
