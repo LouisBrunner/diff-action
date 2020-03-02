@@ -19,13 +19,13 @@ async function run(): Promise<void> {
 
       if (inputs.notifications.check) {
         core.debug(`Notification: Check Run`);
-        await createRun(octokit, github.context, result);
+        await createRun(octokit, github.context, result, inputs.notifications.label);
       }
       if (inputs.notifications.issue) {
         core.debug(`Notification: Issue`);
         const issueId = github.context.issue.number;
         if (issueId || issueId === 0) {
-          await createComment(octokit, github.context, result);
+          await createComment(octokit, github.context, result, inputs.notifications.label);
         } else {
           core.debug(`Notification: no issue id`);
         }

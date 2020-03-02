@@ -22,9 +22,11 @@ export const parseInputs = (getInput: GetInput): Inputs.Args => {
   const notify_check = getInput('notify_check');
   const notify_issue = getInput('notify_issue');
   if (notify_check || notify_issue) {
+    const label = getInput('title');
     const token = getInput('token', {required: true});
     notifications = {
       token,
+      label,
       check: notify_check === 'true',
       issue: notify_issue === 'true',
     };

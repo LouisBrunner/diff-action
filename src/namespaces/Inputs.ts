@@ -8,6 +8,7 @@ export type Args = {
 
   notifications?: {
     token: string;
+    label?: string;
     issue: boolean;
     check: boolean;
   };

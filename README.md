@@ -52,6 +52,10 @@ _Optional_ The path where to output the diff (as well as on the console)
 
 _Optional_ Your `GITHUB_TOKEN`, **required** when using `notify_check` and/or `notify_issue`
 
+### `title`
+
+_Optional_ add a title to the notifications to distinguish between multiple workflows/jobs
+
 ### `notify_check`
 
 _Optional_ Will create a [GitHub Check Run](https://developer.github.com/v3/checks/runs/#create-a-check-run) if `'true'` is specified, **requires** `token` to be given as well

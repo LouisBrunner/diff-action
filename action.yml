@@ -24,6 +24,9 @@ inputs:
   token:
     description: 'your GITHUB_TOKEN, used when sending notifications'
     required: false
+  title:
+    description: 'add a title to the notifications to distinguish between multiple workflows/jobs'
+    required: false
   notify_issue:
     description: 'send a notification to the linked issue/pullrequest with the output'
     required: false
