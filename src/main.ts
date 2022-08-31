@@ -50,7 +50,8 @@ async function run(): Promise<void> {
     }
 
     core.debug(`Done`);
-  } catch (error) {
+  } catch (e) {
+    const error = e as Error;
     core.debug(`Error: ${error}`);
     core.setFailed(error.message);
   }

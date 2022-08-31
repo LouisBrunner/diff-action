@@ -15,7 +15,8 @@ test('test runs', () => {
   try {
     console.log(cp.execSync(`node ${ip}`, options).toString());
   } catch (e) {
-    console.log(e.stdout.toString());
+    const error = e as Error & {stdout: Buffer | string};
+    console.log(error.stdout.toString());
     throw e;
   }
 });
