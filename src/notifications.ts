@@ -1,4 +1,4 @@
-import {GitHub} from '@actions/github';
+import {GitHub} from '@actions/github/lib/utils';
 import {Result} from './processing';
 import {Context} from '@actions/github/lib/context';
 
@@ -11,9 +11,14 @@ const getTitle = (label?: string): string => {
   return `Smart Diff${more}`;
 };
 
-export const createRun = async (octokit: GitHub, context: Context, result: Result, label?: string): Promise<void> => {
+export const createRun = async (
+  octokit: InstanceType<typeof GitHub>,
+  context: Context,
+  result: Result,
+  label?: string,
+): Promise<void> => {
   const title = getTitle(label);
-  await octokit.checks.create({
+  await octokit.rest.checks.create({
     owner: context.repo.owner,
     repo: context.repo.repo,
     head_sha: context.sha,
@@ -31,12 +36,12 @@ export const createRun = async (octokit: GitHub, context: Context, result: Resul
 };
 
 export const createComment = async (
-  octokit: GitHub,
+  octokit: InstanceType<typeof GitHub>,
   context: Context,
   result: Result,
   label?: string,
 ): Promise<void> => {
-  await octokit.issues.createComment({
+  await octokit.rest.issues.createComment({
     owner: context.repo.owner,
     repo: context.repo.repo,
     issue_number: context.issue.number,

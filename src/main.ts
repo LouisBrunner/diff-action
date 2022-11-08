@@ -15,7 +15,7 @@ async function run(): Promise<void> {
 
     if (inputs.notifications) {
       core.debug(`Setting up OctoKit`);
-      const octokit = new github.GitHub(inputs.notifications.token);
+      const octokit = github.getOctokit(inputs.notifications.token);
 
       if (inputs.notifications.check) {
         core.debug(`Notification: Check Run`);
@@ -52,9 +52,9 @@ async function run(): Promise<void> {
     core.debug(`Done`);
   } catch (e) {
     const error = e as Error;
-    core.debug(`Error: ${error}`);
+    core.debug(error.toString());
     core.setFailed(error.message);
   }
 }
 
-run();
+void run();
