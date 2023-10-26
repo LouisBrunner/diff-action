@@ -48,7 +48,9 @@ export const createComment = async (
     body: `## ${getTitle(label)}: ${result.passed ? 'Success' : 'Failure'}
 ${result.summary}
 
+\`\`\`
 ${result.output}
+\`\`\`
 `,
   });
 };
