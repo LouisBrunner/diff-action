@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: LouisBrunner/diff-action@v0.2.0
+    - uses: LouisBrunner/diff-action@v1.0.0
       with:
         old: file1.txt
         new: file2.txt
