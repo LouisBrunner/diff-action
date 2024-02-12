@@ -105,15 +105,18 @@ describe('run action', () => {
     process.env['INPUT_NEW'] = newFile;
     process.env['INPUT_TOLERANCE'] = tolerance.toString();
     process.env['INPUT_MODE'] = mode.toString();
-    const ip = path.join(__dirname, '..', 'lib', 'main.js');
+    const main = path.join(__dirname, '..', 'lib', 'main.js');
     const options: cp.ExecSyncOptions = {
       env: process.env,
     };
     try {
-      const actionOutput = cp.execSync(`node ${ip}`, options).toString();
+      const actionOutput = cp.spawnSync('node', [main], options).output.toString();
       return parseOutput(actionOutput);
     } catch (e) {
       const error = e as Error & {stdout: Buffer | string};
+      if (error.stdout === undefined) {
+        throw error;
+      }
       try {
         return parseOutput(error.stdout.toString());
       } catch {
