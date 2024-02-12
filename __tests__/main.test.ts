@@ -87,7 +87,6 @@ describe('run action', () => {
     let passed: boolean | undefined = undefined;
     let output: string | undefined = undefined;
     for (const line of actionOutput.split('\n')) {
-      console.debug(`line: ${line}`);
       if (line.startsWith('::set-output name=passed::')) {
         passed = line.split('::set-output name=passed::')[1] === 'true';
       }
