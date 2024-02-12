@@ -106,6 +106,7 @@ describe('run action', () => {
     process.env['INPUT_NEW'] = newFile;
     process.env['INPUT_TOLERANCE'] = tolerance.toString();
     process.env['INPUT_MODE'] = mode.toString();
+    process.env['GITHUB_OUTPUT'] = '';
     const main = path.join(__dirname, '..', 'lib', 'main.js');
     const options: cp.ExecSyncOptions = {
       env: process.env,
