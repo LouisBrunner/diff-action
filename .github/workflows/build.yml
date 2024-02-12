@@ -1,15 +1,12 @@
-name: "build-test"
-on: # rebuild any PRs and main branch changes
+name: Build & Test
+
+on:
   pull_request:
   push:
-    branches:
-      - main
-      - 'feature/*'
-      - 'releases/*'
 
 jobs:
-  # make sure build/ci work properly
   build:
+    name: Build & Test
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
