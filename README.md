@@ -15,13 +15,22 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: LouisBrunner/diff-action@v1.0.0
+    - name: Check that the files are the exact same
+      uses: LouisBrunner/diff-action@v2.0.0
+      with:
+        old: file1.txt
+        new: file2.txt
+        mode: strict
+        tolerance: same
+        output: out1.txt
+    - name: Check that there are only additions in file2.txt
+      uses: LouisBrunner/diff-action@v2.0.0
       with:
         old: file1.txt
         new: file2.txt
         mode: addition
         tolerance: better
-        output: out.txt
+        output: out2.txt
 ```
 
 See the [examples workflow](.github/workflows/examples.yml) for more details and examples (and see the [associated runs](https://github.com/LouisBrunner/diff-action/actions?query=workflow%3Aexamples) to see how it will look like).
@@ -38,11 +47,16 @@ See the [examples workflow](.github/workflows/examples.yml) for more details and
 
 ### `mode`
 
-**Required** The method used to measure the `tolerance`, can be either `addition` (addition are better) or `deletion` (deletion are better)
+_Optional_ The method used to measure the `tolerance`, can be either:
+
+* `strict` (default): the files must be exactly the same, only `tolerance: same` is allowed (which is the default)
+* `addition`: addition are better
+* `deletion`: deletion are better
 
 ### `tolerance`
 
-**Required** The tolerance to check the diff for, depends on `mode`, can be either (examples given with mode = `deletion`) `better` (only deletion), `mixed-better` (more deletion than addition), `same` (stay the exact same), `mixed` (same amount of lines but not the same), `mixed-worse` (more addition than deletion) or `worse` (only addition)
+_Optional_ The tolerance to check the diff for, depends on `mode`, can be either (examples given with mode = `deletion`) `better` (only deletion), `mixed-better` (more deletion than addition), `same` (stay the exact same), `mixed` (same amount of lines but not the same), `mixed-worse` (more addition than deletion) or `worse` (only addition)
+Default is `same`
 
 ### `output`
 
@@ -73,7 +87,3 @@ Contains a boolean (`'true'` or `'false'`) representing if the check passed or n
 ### `output`
 
 Contains the output of the diff
-
-## Issues
-
- - Add a mode for the tolerance so `addition` can be better than `deletion` (which isn't possible now)

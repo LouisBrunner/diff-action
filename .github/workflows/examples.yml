@@ -1,137 +1,321 @@
-name: "examples"
+name: Examples
 on: [push]
 
 jobs:
   # make sure the action works on a clean machines without building
 
-  ## Additions
-  test_additions_deleted:
+  ## Defaults
+  test_defaults_deleted:
+    name: "Defaults (deleted, fails)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should fail
+      uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file2_deleted.txt
+
+  test_defaults_same:
+    name: "Defaults (same, works)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Should work
+      uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file3_same.txt
+
+  test_defaults_added:
+    name: "Defaults (added, fails)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Should fail
+      uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file4_added.txt
+
+  test_defaults_mixed:
+    name: "Defaults (mixed, fails)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Should fail
+      uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file5_mixed.txt
+
+  test_defaults_mixed_added:
+    name: "Defaults (mixed-better, fails)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Should fail
+      uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file6_mixed_added.txt
+
+  test_defaults_mixed_deleted:
+    name: "Defaults (mixed_delet, fails)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Should fail
+      uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file7_mixed_deleted.txt
+
+  ## Strict
+  test_strict_deleted:
+    name: "Strict (deleted, fails)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Should fail
+      uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file2_deleted.txt
+        mode: strict
+        tolerance: same
+
+  test_strict_same:
+    name: "Strict (same, works)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Should work
+      uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file3_same.txt
+        mode: strict
+        tolerance: same
+
+  test_strict_added:
+    name: "Strict (added, fails)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Should fail
+      uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file4_added.txt
+        mode: strict
+        tolerance: same
+
+  test_strict_mixed:
+    name: "Strict (mixed, fails)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Should fail
+      uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file5_mixed.txt
+        mode: strict
+        tolerance: same
+
+  test_strict_mixed_added:
+    name: "Strict (mixed-better, fails)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Should fail
+      uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file6_mixed_added.txt
+        mode: strict
+        tolerance: same
+
+  test_strict_mixed_deleted:
+    name: "Strict (mixed-worse, fails)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Should fail
+      uses: ./
+      with:
+        old: fixtures/file1_basic.txt
+        new: fixtures/file7_mixed_deleted.txt
+        mode: strict
+        tolerance: same
+
+  ## Additions
+  test_additions_deleted:
+    name: "Additions (deleted, fails)"
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Should fail
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file2_deleted.txt
         mode: addition
+        tolerance: better
 
   test_additions_same:
+    name: "Additions (same, fails)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should fail
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file3_same.txt
         mode: addition
+        tolerance: better
 
   test_additions_added:
+    name: "Additions (added, works)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should work
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file4_added.txt
         mode: addition
+        tolerance: better
 
   test_additions_mixed:
+    name: "Additions (mixed, fails)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should fail
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file5_mixed.txt
         mode: addition
+        tolerance: better
 
   test_additions_mixed_added:
+    name: "Additions (mixed-better, fails)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should fail
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file6_mixed_added.txt
         mode: addition
+        tolerance: better
 
   test_additions_mixed_deleted:
+    name: "Additions (mixed-worse, fails)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should fail
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file7_mixed_deleted.txt
         mode: addition
+        tolerance: better
 
   ## Deletions
   test_deletions_deleted:
+    name: "Deletions (deleted, works)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should work
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file2_deleted.txt
         mode: deletion
+        tolerance: better
 
   test_deletions_same:
+    name: "Deletions (same, fails)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should fail
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file3_same.txt
         mode: deletion
+        tolerance: better
 
   test_deletions_added:
+    name: "Deletions (added, fails)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should fail
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file4_added.txt
         mode: deletion
+        tolerance: better
 
   test_deletions_mixed:
+    name: "Deletions (mixed, fails)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should fail
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file5_mixed.txt
         mode: deletion
+        tolerance: better
 
   test_deletions_mixed_added:
+    name: "Deletions (mixed-better, fails)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should fail
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file6_mixed_added.txt
         mode: deletion
+        tolerance: better
 
   test_deletions_mixed_deleted:
+    name: "Deletions (mixed-worse, fails)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should fail
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file7_mixed_deleted.txt
         mode: deletion
+        tolerance: better
 
   # Tolerance (Additions)
   test_tolerance_deleted:
+    name: "Tolerance (deleted, works)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should work
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file2_deleted.txt
@@ -139,10 +323,12 @@ jobs:
         tolerance: worse
 
   test_tolerance_same:
+    name: "Tolerance (same, works)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should work
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file3_same.txt
@@ -150,10 +336,12 @@ jobs:
         tolerance: same
 
   test_tolerance_added:
+    name: "Tolerance (added, works)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should work
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file4_added.txt
@@ -161,10 +349,12 @@ jobs:
         tolerance: better
 
   test_tolerance_mixed:
+    name: "Tolerance (mixed, works)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should work
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file5_mixed.txt
@@ -172,10 +362,12 @@ jobs:
         tolerance: mixed
 
   test_tolerance_mixed_added:
+    name: "Tolerance (mixed-better, works)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should work
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file6_mixed_added.txt
@@ -183,10 +375,12 @@ jobs:
         tolerance: mixed-better
 
   test_tolerance_mixed_deleted:
+    name: "Tolerance (mixed-worse, works)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should work
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file7_mixed_deleted.txt
@@ -195,22 +389,27 @@ jobs:
 
   # Outputs
   test_output_file:
+    name: "Output (file, works)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should work
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file4_added.txt
         mode: addition
+        tolerance: better
         output: out.txt
     - run: cat out.txt
 
   test_output_notifs_good:
+    name: "Output (notif, works)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should work
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file4_added.txt
@@ -221,10 +420,12 @@ jobs:
         notify_check: true
 
   test_output_notifs_bad:
+    name: "Output (notif, fails)"
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v1
-    - uses: ./
+    - name: Should fail
+      uses: ./
       with:
         old: fixtures/file1_basic.txt
         new: fixtures/file2_deleted.txt

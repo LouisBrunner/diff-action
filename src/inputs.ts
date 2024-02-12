@@ -18,6 +18,10 @@ export const parseInputs = (getInput: GetInput): Inputs.Args => {
     throw new Error(`invalid value for 'tolerance': '${tolerance}'`);
   }
 
+  if (mode == Inputs.Mode.Strict && tolerance != Inputs.Tolerance.Same) {
+    throw new Error(`'tolerance' must be 'same' when 'mode' is 'strict'`);
+  }
+
   let notifications;
   const notify_check = getInput('notify_check');
   const notify_issue = getInput('notify_issue');

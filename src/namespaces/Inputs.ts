@@ -24,6 +24,7 @@ export enum Tolerance {
 }
 
 export enum Mode {
+  Strict = 'strict',
   Addition = 'addition',
   Deletion = 'deletion',
 }

@@ -31,6 +31,35 @@ const getSummary = (passed: boolean, expected: Inputs.Tolerance, result: Inputs.
   return `Check succeeded with tolerance \`${result}\` (expected \`${expected}\` or better)`;
 };
 
+const calculateResult = (
+  counts: {added: number; removed: number},
+  mode: Inputs.Mode,
+  expected: Inputs.Tolerance,
+): {result: Inputs.Tolerance; passed: boolean} => {
+  if (mode == Inputs.Mode.Strict) {
+    if (counts.removed === 0 && counts.added === 0) {
+      return {passed: true, result: Inputs.Tolerance.Same};
+    }
+    return {passed: false, result: Inputs.Tolerance.Worse};
+  }
+
+  let result = Inputs.Tolerance.Same;
+  if (counts.removed === 0 && counts.added === 0) {
+    result = Inputs.Tolerance.Same;
+  } else if (counts.removed === counts.added) {
+    result = Inputs.Tolerance.Mixed;
+  } else if (counts.removed > 0 && counts.added === 0) {
+    result = mode == Inputs.Mode.Addition ? Inputs.Tolerance.Worse : Inputs.Tolerance.Better;
+  } else if (counts.removed > 0 && counts.removed > counts.added) {
+    result = mode == Inputs.Mode.Addition ? Inputs.Tolerance.MixedWorse : Inputs.Tolerance.MixedBetter;
+  } else if (counts.added > 0 && counts.removed === 0) {
+    result = mode == Inputs.Mode.Addition ? Inputs.Tolerance.Better : Inputs.Tolerance.Worse;
+  } else if (counts.added > 0 && counts.added > counts.removed) {
+    result = mode == Inputs.Mode.Addition ? Inputs.Tolerance.MixedBetter : Inputs.Tolerance.MixedWorse;
+  }
+  return {passed: compareTolerance(expected, result), result};
+};
+
 export const processDiff = (old: string, newPath: string, mode: Inputs.Mode, expected: Inputs.Tolerance): Result => {
   const oldContent = fs.readFileSync(old, 'utf-8');
   const newContent = fs.readFileSync(newPath, 'utf-8');
@@ -50,21 +79,7 @@ export const processDiff = (old: string, newPath: string, mode: Inputs.Mode, exp
     }
   });
 
-  let result = Inputs.Tolerance.Same;
-  if (counts.removed === 0 && counts.added === 0) {
-    result = Inputs.Tolerance.Same;
-  } else if (counts.removed === counts.added) {
-    result = Inputs.Tolerance.Mixed;
-  } else if (counts.removed > 0 && counts.added === 0) {
-    result = mode == Inputs.Mode.Addition ? Inputs.Tolerance.Worse : Inputs.Tolerance.Better;
-  } else if (counts.removed > 0 && counts.removed > counts.added) {
-    result = mode == Inputs.Mode.Addition ? Inputs.Tolerance.MixedWorse : Inputs.Tolerance.MixedBetter;
-  } else if (counts.added > 0 && counts.removed === 0) {
-    result = mode == Inputs.Mode.Addition ? Inputs.Tolerance.Better : Inputs.Tolerance.Worse;
-  } else if (counts.added > 0 && counts.added > counts.removed) {
-    result = mode == Inputs.Mode.Addition ? Inputs.Tolerance.MixedBetter : Inputs.Tolerance.MixedWorse;
-  }
-  const passed = compareTolerance(expected, result);
+  const {result, passed} = calculateResult(counts, mode, expected);
   return {
     result,
     passed,
