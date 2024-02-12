@@ -13,11 +13,10 @@ inputs:
     required: true
   mode:
     description: 'the mode used to measure the tolerance'
-    required: true
+    default: 'strict'
   tolerance:
     description: 'the tolerance used to judge if the diff improved'
-    required: false
-    default: 'better'
+    default: 'same'
   output:
     description: 'write the diff to the given file'
     required: false
