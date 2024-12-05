@@ -449,7 +449,7 @@ jobs:
           new: fixtures/file4_added.txt
           mode: addition
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: Works
+          title: Works (sticky)
           notify_issue: true
           notify_check: true
 
@@ -465,6 +465,6 @@ jobs:
           new: fixtures/file2_deleted.txt
           mode: addition
           token: ${{ secrets.GITHUB_TOKEN }}
-          title: Fails
+          title: Fails (sticky)
           notify_issue: true
           notify_check: true
