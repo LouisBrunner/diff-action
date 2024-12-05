@@ -3,7 +3,7 @@ import * as github from '@actions/github';
 import fs from 'fs';
 import {parseInputs} from './inputs';
 import {processDiff} from './processing';
-import {createRun, upsertComment} from './notifications';
+import {createComment, createRun, upsertComment} from './notifications';
 
 async function run(): Promise<void> {
   try {
@@ -25,7 +25,11 @@ async function run(): Promise<void> {
         core.debug(`Notification: Issue`);
         const issueId = github.context.issue.number;
         if (issueId || issueId === 0) {
-          await upsertComment(octokit, github.context, result, inputs.notifications.label);
+          if (inputs.notifications.sticky) {
+            await upsertComment(octokit, github.context, result, inputs.notifications.label);
+          } else {
+            await createComment(octokit, github.context, result, inputs.notifications.label);
+          }
         } else {
           core.debug(`Notification: no issue id`);
         }

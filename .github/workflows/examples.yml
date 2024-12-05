@@ -452,6 +452,7 @@ jobs:
           title: Works (sticky)
           notify_issue: true
           notify_check: true
+          sticky_comment: true
 
   test_output_sticky_notifs_bad:
     name: 'Output (sticky notif, fails)'
@@ -468,3 +469,4 @@ jobs:
           title: Fails (sticky)
           notify_issue: true
           notify_check: true
+          sticky_comment: true
