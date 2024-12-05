@@ -35,6 +35,21 @@ export const createRun = async (
   });
 };
 
+const commentLocator = (label?: string): string => {
+  return `<!-- Diff Action / Pull Request Comment / ${label ?? ''} -->`;
+};
+
+const commentBody = (label: string | undefined, result: Result): string => {
+  return `## ${getTitle(label)}: ${result.passed ? 'Success' : 'Failure'}
+${result.summary}
+
+\`\`\`
+${result.output}
+\`\`\`
+
+${commentLocator(label)}`;
+};
+
 export const createComment = async (
   octokit: InstanceType<typeof GitHub>,
   context: Context,
@@ -45,12 +60,55 @@ export const createComment = async (
     owner: context.repo.owner,
     repo: context.repo.repo,
     issue_number: context.issue.number,
-    body: `## ${getTitle(label)}: ${result.passed ? 'Success' : 'Failure'}
-${result.summary}
-
-\`\`\`
-${result.output}
-\`\`\`
-`,
+    body: commentBody(label, result),
   });
+};
+
+const updateComment = async (
+  octokit: InstanceType<typeof GitHub>,
+  context: Context,
+  comment_id: number,
+  result: Result,
+  label?: string,
+): Promise<void> => {
+  await octokit.rest.issues.updateComment({
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    comment_id: comment_id,
+    body: commentBody(label, result),
+  });
+};
+
+const findComment = async (
+  octokit: InstanceType<typeof GitHub>,
+  context: Context,
+  label?: string,
+): Promise<undefined | number> => {
+  const {viewer}: {viewer: {login?: string}} = await octokit.graphql('query { viewer { login } }');
+  const locator = commentLocator(label);
+  for await (const entry of octokit.paginate.iterator(octokit.rest.issues.listComments, {
+    owner: context.repo.owner,
+    repo: context.repo.repo,
+    issue_number: context.issue.number,
+  })) {
+    for (const comment of entry.data) {
+      if (comment.body?.endsWith(locator) && comment.user?.login === viewer.login) {
+        return comment.id;
+      }
+    }
+  }
+};
+
+export const upsertComment = async (
+  octokit: InstanceType<typeof GitHub>,
+  context: Context,
+  result: Result,
+  label?: string,
+): Promise<void> => {
+  const comment_id = await findComment(octokit, context, label);
+  if (comment_id !== undefined) {
+    await updateComment(octokit, context, comment_id, result, label);
+  } else {
+    await createComment(octokit, context, result, label);
+  }
 };

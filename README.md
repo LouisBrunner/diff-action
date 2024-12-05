@@ -78,6 +78,15 @@ _Optional_ Will create a [GitHub Check Run](https://developer.github.com/v3/chec
 
 _Optional_ Will create a comment in the linked issue if `'true'` is specified, **requires** `token` to be given as well
 
+### `sticky_comment`
+
+_Optional_ When using `notify_issue: true`, will edit the created comment instead of creating a new one everytime.
+
+Note that the updated comment is based on the `title`. Thus:
+
+* if you call the action multiple times in your workflow, make sure the titles are unique to each call to avoid overwriting the same comment
+* make sure the titles are the same between different calls to the action if you want to update the same comment
+
 ## Outputs
 
 ### `passed`

@@ -11,6 +11,7 @@ export type Args = {
     label?: string;
     issue: boolean;
     check: boolean;
+    sticky: boolean;
   };
 };
 

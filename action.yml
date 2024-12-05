@@ -29,6 +29,9 @@ inputs:
   notify_issue:
     description: 'send a notification to the linked issue/pullrequest with the output'
     required: false
+  sticky_comment:
+    description: 'will edit the created comment instead of creating a new one everytime'
+    required: false
   notify_check:
     description: 'create a check run with the output'
     required: false
