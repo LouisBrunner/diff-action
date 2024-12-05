@@ -25,6 +25,7 @@ export const parseInputs = (getInput: GetInput): Inputs.Args => {
   let notifications;
   const notify_check = getInput('notify_check');
   const notify_issue = getInput('notify_issue');
+  const sticky_comment = getInput('sticky_comment');
   if (notify_check || notify_issue) {
     const label = getInput('title');
     const token = getInput('token', {required: true});
@@ -33,6 +34,7 @@ export const parseInputs = (getInput: GetInput): Inputs.Args => {
       label,
       check: notify_check === 'true',
       issue: notify_issue === 'true',
+      sticky: sticky_comment === 'true',
     };
   }
 
