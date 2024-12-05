@@ -36,7 +36,7 @@ export const createRun = async (
 };
 
 const commentLocator = (label?: string): string => {
-  return `<!-- Diff Action / Pull Request Comment / ${label ?? ''} -->`;
+  return `<!-- Diff Action / Pull Request Comment / ${label ?? ''} -->\n`;
 };
 
 const commentBody = (label: string | undefined, result: Result): string => {
