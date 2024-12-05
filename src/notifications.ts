@@ -36,7 +36,8 @@ export const createRun = async (
 };
 
 const commentLocator = (label?: string): string => {
-  return `<!-- Diff Action / Pull Request Comment / ${label ?? ''} -->\n`;
+  return `<!-- Diff Action / Pull Request Comment / ${label ?? ''} -->
+`;
 };
 
 const commentBody = (label: string | undefined, result: Result): string => {
@@ -91,7 +92,6 @@ const findComment = async (
     issue_number: context.issue.number,
   })) {
     for (const comment of entry.data) {
-      console.log('USER', comment.user, viewer.login);
       if (comment.body?.startsWith(locator) && comment.user?.login === viewer.login) {
         return comment.id;
       }
