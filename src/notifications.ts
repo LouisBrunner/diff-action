@@ -50,6 +50,8 @@ ${result.output}
 ${commentLocator(label)}`;
 };
 
+// comment
+
 const createComment = async (
   octokit: InstanceType<typeof GitHub>,
   context: Context,
