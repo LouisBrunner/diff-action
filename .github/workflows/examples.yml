@@ -1,5 +1,7 @@
 name: Examples
-on: [push]
+on:
+  push:
+  pull_request:
 
 jobs:
   # make sure the action works on a clean machines without building
