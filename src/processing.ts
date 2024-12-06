@@ -1,36 +1,33 @@
 import fs from "node:fs";
 import { createTwoFilesPatch, diffLines } from "diff";
-import * as Inputs from "./namespaces/Inputs";
+import { Mode, Tolerance } from "./inputs";
 
 export type Result = {
-	result: Inputs.Tolerance;
+	result: Tolerance;
 	passed: boolean;
 	summary: string;
 	output: string;
 };
 
-type ToleranceLevelMap = Record<Inputs.Tolerance, number>;
+type ToleranceLevelMap = Record<Tolerance, number>;
 
 const levels: ToleranceLevelMap = {
-	[Inputs.Tolerance.Better]: 3,
-	[Inputs.Tolerance.Same]: 2,
-	[Inputs.Tolerance.MixedBetter]: 1,
-	[Inputs.Tolerance.Mixed]: -1,
-	[Inputs.Tolerance.MixedWorse]: -2,
-	[Inputs.Tolerance.Worse]: -3,
+	[Tolerance.Better]: 3,
+	[Tolerance.Same]: 2,
+	[Tolerance.MixedBetter]: 1,
+	[Tolerance.Mixed]: -1,
+	[Tolerance.MixedWorse]: -2,
+	[Tolerance.Worse]: -3,
 };
 
-const compareTolerance = (
-	expected: Inputs.Tolerance,
-	result: Inputs.Tolerance,
-): boolean => {
+const compareTolerance = (expected: Tolerance, result: Tolerance): boolean => {
 	return levels[result] >= levels[expected];
 };
 
 const getSummary = (
 	passed: boolean,
-	expected: Inputs.Tolerance,
-	result: Inputs.Tolerance,
+	expected: Tolerance,
+	result: Tolerance,
 ): string => {
 	if (!passed) {
 		return `Expected tolerance \`${expected}\` but got \`${result}\` instead`;
@@ -40,41 +37,31 @@ const getSummary = (
 
 const calculateResult = (
 	counts: { added: number; removed: number },
-	mode: Inputs.Mode,
-	expected: Inputs.Tolerance,
-): { result: Inputs.Tolerance; passed: boolean } => {
-	if (mode === Inputs.Mode.Strict) {
+	mode: Mode,
+	expected: Tolerance,
+): { result: Tolerance; passed: boolean } => {
+	if (mode === Mode.Strict) {
 		if (counts.removed === 0 && counts.added === 0) {
-			return { passed: true, result: Inputs.Tolerance.Same };
+			return { passed: true, result: Tolerance.Same };
 		}
-		return { passed: false, result: Inputs.Tolerance.Worse };
+		return { passed: false, result: Tolerance.Worse };
 	}
 
-	let result = Inputs.Tolerance.Same;
+	let result = Tolerance.Same;
 	if (counts.removed === 0 && counts.added === 0) {
-		result = Inputs.Tolerance.Same;
+		result = Tolerance.Same;
 	} else if (counts.removed === counts.added) {
-		result = Inputs.Tolerance.Mixed;
+		result = Tolerance.Mixed;
 	} else if (counts.removed > 0 && counts.added === 0) {
-		result =
-			mode === Inputs.Mode.Addition
-				? Inputs.Tolerance.Worse
-				: Inputs.Tolerance.Better;
+		result = mode === Mode.Addition ? Tolerance.Worse : Tolerance.Better;
 	} else if (counts.removed > 0 && counts.removed > counts.added) {
 		result =
-			mode === Inputs.Mode.Addition
-				? Inputs.Tolerance.MixedWorse
-				: Inputs.Tolerance.MixedBetter;
+			mode === Mode.Addition ? Tolerance.MixedWorse : Tolerance.MixedBetter;
 	} else if (counts.added > 0 && counts.removed === 0) {
-		result =
-			mode === Inputs.Mode.Addition
-				? Inputs.Tolerance.Better
-				: Inputs.Tolerance.Worse;
+		result = mode === Mode.Addition ? Tolerance.Better : Tolerance.Worse;
 	} else if (counts.added > 0 && counts.added > counts.removed) {
 		result =
-			mode === Inputs.Mode.Addition
-				? Inputs.Tolerance.MixedBetter
-				: Inputs.Tolerance.MixedWorse;
+			mode === Mode.Addition ? Tolerance.MixedBetter : Tolerance.MixedWorse;
 	}
 	return { passed: compareTolerance(expected, result), result };
 };
@@ -82,8 +69,8 @@ const calculateResult = (
 export const processDiff = (
 	old: string,
 	newPath: string,
-	mode: Inputs.Mode,
-	expected: Inputs.Tolerance,
+	mode: Mode,
+	expected: Tolerance,
 ): Result => {
 	const oldContent = fs.readFileSync(old, "utf-8");
 	const newContent = fs.readFileSync(newPath, "utf-8");

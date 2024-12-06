@@ -1,5 +1,6 @@
 import type { Context } from "@actions/github/lib/context";
 import type { GitHub } from "@actions/github/lib/utils";
+import type { Notifications } from "./inputs";
 import type { Result } from "./processing";
 
 const formatDate = (): string => {
@@ -9,6 +10,17 @@ const formatDate = (): string => {
 const getTitle = (label?: string): string => {
 	const more = label ? ` (${label})` : "";
 	return `Smart Diff${more}`;
+};
+
+export const shouldComment = (
+	comment_on: Notifications["comment_on"],
+	passed: boolean,
+): boolean => {
+	return (
+		comment_on === "always" ||
+		(comment_on === "success" && passed) ||
+		(comment_on === "failure" && !passed)
+	);
 };
 
 export const createRun = async (
