@@ -76,7 +76,13 @@ _Optional_ Will create a [GitHub Check Run](https://developer.github.com/v3/chec
 
 ### `notify_issue`
 
-_Optional_ Will create a comment in the linked issue if `'true'` is specified, **requires** `token` to be given as well
+_Optional_ Will create a comment in the linked issue if specified, **requires** `token` to be given as well.
+
+Possible values:
+
+ - `always` / `true`: will always create a comment (note: `true` is deprecated in favor of `always`)
+ - `failure`: will only create a comment if the check fails
+ - `success`: will only create a comment if the check passes
 
 ### `sticky_comment`
 

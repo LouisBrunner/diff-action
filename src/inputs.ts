@@ -1,5 +1,38 @@
 import type { InputOptions } from "@actions/core";
-import { type Args, Mode, Tolerance } from "./namespaces/Inputs";
+
+export type Notifications = {
+	token: string;
+	label?: string;
+	comment_on: "always" | "failure" | "success" | false;
+	sticky_comment: boolean;
+	add_check: boolean;
+};
+
+export type Args = {
+	old: string;
+	new: string;
+
+	tolerance: Tolerance;
+	mode: Mode;
+	output?: string;
+
+	notifications?: Notifications;
+};
+
+export enum Tolerance {
+	Better = "better",
+	MixedBetter = "mixed-better",
+	Same = "same",
+	Mixed = "mixed",
+	MixedWorse = "mixed-worse",
+	Worse = "worse",
+}
+
+export enum Mode {
+	Strict = "strict",
+	Addition = "addition",
+	Deletion = "deletion",
+}
 
 type GetInput = (name: string, options?: InputOptions) => string;
 
@@ -24,30 +57,41 @@ export const parseInputs = (getInput: GetInput): Args => {
 		throw new Error(`'tolerance' must be 'same' when 'mode' is 'strict'`);
 	}
 
-	let notifications: Args["notifications"];
+	let notifications: Notifications | undefined;
 	const notify_check = getInput("notify_check");
 	const notify_issue = getInput("notify_issue");
-	const sticky_comment = getInput("sticky_comment");
 	if (notify_check || notify_issue) {
+		const sticky_comment = getInput("sticky_comment");
 		const label = getInput("title");
 		const token = getInput("token", { required: true });
+		let comment_on: Notifications["comment_on"] = false;
+		switch (notify_issue) {
+			case "true":
+			case "always":
+				comment_on = "always";
+				break;
+			case "failure":
+				comment_on = "failure";
+				break;
+			case "success":
+				comment_on = "success";
+				break;
+		}
 		notifications = {
 			token,
 			label,
-			check: notify_check === "true",
-			issue: notify_issue === "true",
-			sticky: sticky_comment === "true",
+			add_check: notify_check === "true",
+			comment_on,
+			sticky_comment: sticky_comment === "true",
 		};
 	}
 
 	return {
 		old,
 		new: newPath,
-
 		mode,
 		tolerance,
 		output,
-
 		notifications,
 	};
 };
