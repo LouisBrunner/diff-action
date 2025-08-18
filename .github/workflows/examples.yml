@@ -11,7 +11,7 @@ jobs:
     name: "Defaults (deleted, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -22,7 +22,7 @@ jobs:
     name: "Defaults (same, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -33,7 +33,7 @@ jobs:
     name: "Defaults (added, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -44,7 +44,7 @@ jobs:
     name: "Defaults (mixed, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -55,7 +55,7 @@ jobs:
     name: "Defaults (mixed-better, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -66,7 +66,7 @@ jobs:
     name: "Defaults (mixed_delet, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -78,7 +78,7 @@ jobs:
     name: "Strict (deleted, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -91,7 +91,7 @@ jobs:
     name: "Strict (same, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -104,7 +104,7 @@ jobs:
     name: "Strict (added, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -117,7 +117,7 @@ jobs:
     name: "Strict (mixed, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -130,7 +130,7 @@ jobs:
     name: "Strict (mixed-better, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -143,7 +143,7 @@ jobs:
     name: "Strict (mixed-worse, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -157,7 +157,7 @@ jobs:
     name: "Additions (deleted, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -170,7 +170,7 @@ jobs:
     name: "Additions (same, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -183,7 +183,7 @@ jobs:
     name: "Additions (added, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -196,7 +196,7 @@ jobs:
     name: "Additions (mixed, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -209,7 +209,7 @@ jobs:
     name: "Additions (mixed-better, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -222,7 +222,7 @@ jobs:
     name: "Additions (mixed-worse, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -236,7 +236,7 @@ jobs:
     name: "Deletions (deleted, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -249,7 +249,7 @@ jobs:
     name: "Deletions (same, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -262,7 +262,7 @@ jobs:
     name: "Deletions (added, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -275,7 +275,7 @@ jobs:
     name: "Deletions (mixed, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -288,7 +288,7 @@ jobs:
     name: "Deletions (mixed-better, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -301,7 +301,7 @@ jobs:
     name: "Deletions (mixed-worse, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -315,7 +315,7 @@ jobs:
     name: "Tolerance (deleted, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -328,7 +328,7 @@ jobs:
     name: "Tolerance (same, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -341,7 +341,7 @@ jobs:
     name: "Tolerance (added, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -354,7 +354,7 @@ jobs:
     name: "Tolerance (mixed, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -367,7 +367,7 @@ jobs:
     name: "Tolerance (mixed-better, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -380,7 +380,7 @@ jobs:
     name: "Tolerance (mixed-worse, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -394,7 +394,7 @@ jobs:
     name: "Output (file, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -409,7 +409,7 @@ jobs:
     name: "Output (notif, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -425,7 +425,7 @@ jobs:
     name: "Output (notif, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -441,7 +441,7 @@ jobs:
     name: "Output (sticky notif, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -458,7 +458,7 @@ jobs:
     name: "Output (sticky notif, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
@@ -475,7 +475,7 @@ jobs:
     name: "Output (quiet notif, works)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should work
         uses: ./
         with:
@@ -492,7 +492,7 @@ jobs:
     name: "Output (quiet notif, fails)"
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Should fail
         uses: ./
         with:
