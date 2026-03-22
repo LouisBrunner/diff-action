@@ -92,9 +92,9 @@ export const processDiff = (
 
 	const { result, passed } = calculateResult(counts, mode, expected);
 	return {
-		result,
-		passed,
-		summary: getSummary(passed, expected, result),
 		output: createTwoFilesPatch(old, newPath, oldContent, newContent),
+		passed,
+		result,
+		summary: getSummary(passed, expected, result),
 	};
 };
