@@ -1,45 +1,45 @@
-name: 'Smart Diff'
-description: 'Perform a diff between two files given a tolerance and send notifications'
-author: 'Louis Brunner'
+name: "Smart Diff"
+description: "Perform a diff between two files given a tolerance and send notifications"
+author: "Louis Brunner"
 branding:
-  icon: 'plus-square'
-  color: 'green'
+  icon: "plus-square"
+  color: "green"
 inputs:
   old:
-    description: 'first file to compare'
+    description: "first file to compare"
     required: true
   new:
-    description: 'second file to compare'
+    description: "second file to compare"
     required: true
   mode:
-    description: 'the mode used to measure the tolerance'
-    default: 'strict'
+    description: "the mode used to measure the tolerance"
+    default: "strict"
   tolerance:
-    description: 'the tolerance used to judge if the diff improved'
-    default: 'same'
+    description: "the tolerance used to judge if the diff improved"
+    default: "same"
   output:
-    description: 'write the diff to the given file'
+    description: "write the diff to the given file"
     required: false
   token:
-    description: 'your GITHUB_TOKEN, used when sending notifications'
+    description: "your GITHUB_TOKEN, used when sending notifications"
     required: false
   title:
-    description: 'add a title to the notifications to distinguish between multiple workflows/jobs'
+    description: "add a title to the notifications to distinguish between multiple workflows/jobs"
     required: false
   notify_issue:
-    description: 'send a notification to the linked issue/pullrequest with the output'
+    description: "send a notification to the linked issue/pullrequest with the output"
     required: false
   sticky_comment:
-    description: 'will edit the created comment instead of creating a new one everytime'
+    description: "will edit the created comment instead of creating a new one everytime"
     required: false
   notify_check:
-    description: 'create a check run with the output'
+    description: "create a check run with the output"
     required: false
 outputs:
   passed:
-    description: 'boolean describing if the test passed or not'
+    description: "boolean describing if the test passed or not"
   output:
-    description: 'text of the diff'
+    description: "text of the diff"
 runs:
-  using: 'node20'
-  main: 'dist/index.js'
+  using: "node24"
+  main: "dist/index.js"

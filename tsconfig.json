@@ -1,10 +1,12 @@
 {
 	"compilerOptions": {
-		"target": "es6",
+		"target": "es2022",
 		"module": "commonjs",
 		"outDir": "./lib",
 		"rootDir": "./src",
+		"lib": ["es2022"],
 		"strict": true,
+		"alwaysStrict": true,
 		"noImplicitAny": true,
 		"esModuleInterop": true
 	},

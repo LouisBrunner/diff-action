@@ -95,8 +95,8 @@ describe("run action", () => {
 	};
 
 	const parseOutput = (actionOutput: string): ActionOutputs => {
-		let passed: boolean | undefined = undefined;
-		let output: string | undefined = undefined;
+		let passed: boolean | undefined;
+		let output: string | undefined;
 		for (const line of actionOutput.split("\n")) {
 			if (line.startsWith("::set-output name=passed::")) {
 				passed = line.split("::set-output name=passed::")[1] === "true";
@@ -210,34 +210,31 @@ describe("run action", () => {
 		return cases;
 	})();
 
-	test.each(cases)(
-		"with $name",
-		({
-			newFile,
+	test.each(cases)("with $name", ({
+		newFile,
+		tolerance,
+		mode,
+		expectedPass,
+		expectedOutput,
+		expectError,
+	}: Case) => {
+		if (expectError) {
+			expect(() => {
+				runAction(BASE_FILE, newFile, tolerance, mode);
+			}).toThrow();
+			return;
+		}
+		const { passed, output } = runAction(
+			BASE_FILE,
+			path.join(FIXTURES_FOLDER, newFile),
 			tolerance,
 			mode,
-			expectedPass,
+		);
+		expect(passed).toBe(expectedPass);
+		expect(output.replace(new RegExp(FIXTURES_FOLDER, "g"), "FIXTURES")).toBe(
 			expectedOutput,
-			expectError,
-		}: Case) => {
-			if (expectError) {
-				expect(() => {
-					runAction(BASE_FILE, newFile, tolerance, mode);
-				}).toThrow();
-				return;
-			}
-			const { passed, output } = runAction(
-				BASE_FILE,
-				path.join(FIXTURES_FOLDER, newFile),
-				tolerance,
-				mode,
-			);
-			expect(passed).toBe(expectedPass);
-			expect(output.replace(new RegExp(FIXTURES_FOLDER, "g"), "FIXTURES")).toBe(
-				expectedOutput,
-			);
-		},
-	);
+		);
+	});
 });
 
 // TODO: missing tests for notifications?
