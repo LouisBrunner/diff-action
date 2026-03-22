@@ -78,20 +78,20 @@ export const parseInputs = (getInput: GetInput): Args => {
 				break;
 		}
 		notifications = {
-			token,
-			label,
 			add_check: notify_check === "true",
 			comment_on,
+			label,
 			sticky_comment: sticky_comment === "true",
+			token,
 		};
 	}
 
 	return {
-		old,
-		new: newPath,
 		mode,
-		tolerance,
-		output,
+		new: newPath,
 		notifications,
+		old,
+		output,
+		tolerance,
 	};
 };

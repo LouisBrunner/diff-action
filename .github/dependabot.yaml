@@ -1,15 +1,15 @@
 version: 2
 updates:
-  - package-ecosystem: 'github-actions'
+  - package-ecosystem: "github-actions"
     directory: /
     schedule:
       interval: weekly
     groups:
       actions-deps:
         patterns:
-          - '*'
+          - "*"
 
-  - package-ecosystem: npm
+  - package-ecosystem: bun
     directory: /
     schedule:
       interval: monthly
@@ -17,13 +17,13 @@ updates:
       security-updates:
         applies-to: security-updates
         patterns:
-          - '*'
+          - "*"
       major-updates:
         applies-to: version-updates
         update-types:
-          - 'major'
+          - "major"
       minor-updates:
         applies-to: version-updates
         update-types:
-          - 'minor'
-          - 'patch'
+          - "minor"
+          - "patch"

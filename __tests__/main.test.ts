@@ -26,34 +26,34 @@ type TestFile = {
 };
 const TEST_FILES: TestFile[] = [
 	{
+		diff: "===================================================================%0A--- FIXTURES/file1_basic.txt%0A+++ FIXTURES/file2_deleted.txt%0A@@ -1,4 +1,3 @@%0A A%0A-B%0A C%0A D%0A",
 		path: "file2_deleted.txt",
 		tolerance: "worse",
-		diff: "===================================================================%0A--- FIXTURES/file1_basic.txt%0A+++ FIXTURES/file2_deleted.txt%0A@@ -1,4 +1,3 @@%0A A%0A-B%0A C%0A D%0A",
 	},
 	{
+		diff: "===================================================================%0A--- FIXTURES/file1_basic.txt%0A+++ FIXTURES/file3_same.txt%0A",
 		path: "file3_same.txt",
 		tolerance: "same",
-		diff: "===================================================================%0A--- FIXTURES/file1_basic.txt%0A+++ FIXTURES/file3_same.txt%0A",
 	},
 	{
+		diff: "===================================================================%0A--- FIXTURES/file1_basic.txt%0A+++ FIXTURES/file4_added.txt%0A@@ -1,4 +1,5 @@%0A A%0A B%0A C%0A D%0A+E%0A",
 		path: "file4_added.txt",
 		tolerance: "better",
-		diff: "===================================================================%0A--- FIXTURES/file1_basic.txt%0A+++ FIXTURES/file4_added.txt%0A@@ -1,4 +1,5 @@%0A A%0A B%0A C%0A D%0A+E%0A",
 	},
 	{
+		diff: "===================================================================%0A--- FIXTURES/file1_basic.txt%0A+++ FIXTURES/file5_mixed.txt%0A@@ -1,4 +1,4 @@%0A A%0A B%0A-C%0A D%0A+E%0A",
 		path: "file5_mixed.txt",
 		tolerance: "mixed",
-		diff: "===================================================================%0A--- FIXTURES/file1_basic.txt%0A+++ FIXTURES/file5_mixed.txt%0A@@ -1,4 +1,4 @@%0A A%0A B%0A-C%0A D%0A+E%0A",
 	},
 	{
+		diff: "===================================================================%0A--- FIXTURES/file1_basic.txt%0A+++ FIXTURES/file6_mixed_added.txt%0A@@ -1,4 +1,5 @@%0A A%0A B%0A-C%0A D%0A+E%0A+F%0A",
 		path: "file6_mixed_added.txt",
 		tolerance: "mixed-better",
-		diff: "===================================================================%0A--- FIXTURES/file1_basic.txt%0A+++ FIXTURES/file6_mixed_added.txt%0A@@ -1,4 +1,5 @@%0A A%0A B%0A-C%0A D%0A+E%0A+F%0A",
 	},
 	{
+		diff: "===================================================================%0A--- FIXTURES/file1_basic.txt%0A+++ FIXTURES/file7_mixed_deleted.txt%0A@@ -1,4 +1,3 @@%0A A%0A B%0A-C%0A-D%0A+E%0A",
 		path: "file7_mixed_deleted.txt",
 		tolerance: "mixed-worse",
-		diff: "===================================================================%0A--- FIXTURES/file1_basic.txt%0A+++ FIXTURES/file7_mixed_deleted.txt%0A@@ -1,4 +1,3 @@%0A A%0A B%0A-C%0A-D%0A+E%0A",
 	},
 ];
 
@@ -95,8 +95,8 @@ describe("run action", () => {
 	};
 
 	const parseOutput = (actionOutput: string): ActionOutputs => {
-		let passed: boolean | undefined = undefined;
-		let output: string | undefined = undefined;
+		let passed: boolean | undefined;
+		let output: string | undefined;
 		for (const line of actionOutput.split("\n")) {
 			if (line.startsWith("::set-output name=passed::")) {
 				passed = line.split("::set-output name=passed::")[1] === "true";
@@ -108,7 +108,7 @@ describe("run action", () => {
 		if (passed === undefined || output === undefined) {
 			throw new Error("Action did not return expected output");
 		}
-		return { passed, output };
+		return { output, passed };
 	};
 
 	const runAction = (
@@ -122,7 +122,7 @@ describe("run action", () => {
 		process.env.INPUT_TOLERANCE = tolerance.toString();
 		process.env.INPUT_MODE = mode.toString();
 		process.env.GITHUB_OUTPUT = "";
-		const main = path.join(__dirname, "..", "lib", "main.js");
+		const main = path.join(__dirname, "..", "dist", "index.js");
 		const options: cp.ExecSyncOptions = {
 			env: process.env,
 		};
@@ -160,25 +160,25 @@ describe("run action", () => {
 	const cases = ((): Case[] => {
 		const cases: Case[] = [
 			{
+				expectError: true,
+				mode: "strict",
 				name: "an unknown file",
 				newFile: "do not exist . whatever",
-				mode: "strict",
 				tolerance: "same",
-				expectError: true,
 			},
 			{
+				expectError: true,
+				mode: "mixed" as unknown as Mode,
 				name: "an unknown mode",
 				newFile: TEST_FILES[0].path,
-				mode: "mixed" as unknown as Mode,
 				tolerance: "same",
-				expectError: true,
 			},
 			{
+				expectError: true,
+				mode: "addition",
 				name: "an unknown tolerance",
 				newFile: TEST_FILES[0].path,
-				mode: "addition",
 				tolerance: "high" as unknown as Tolerance,
-				expectError: true,
 			},
 		];
 
@@ -195,13 +195,13 @@ describe("run action", () => {
 						result = "an error";
 					}
 					cases.push({
+						expectError,
+						expectedOutput: file.diff,
+						expectedPass,
+						mode: mode,
 						name: `file ${file.path}, mode ${mode}, tolerance ${tolerance} and expecting ${result}`,
 						newFile: file.path,
 						tolerance: tolerance,
-						mode: mode,
-						expectedPass,
-						expectedOutput: file.diff,
-						expectError,
 					});
 				}
 			}
@@ -210,34 +210,31 @@ describe("run action", () => {
 		return cases;
 	})();
 
-	test.each(cases)(
-		"with $name",
-		({
-			newFile,
+	test.each(cases)("with $name", ({
+		newFile,
+		tolerance,
+		mode,
+		expectedPass,
+		expectedOutput,
+		expectError,
+	}: Case) => {
+		if (expectError) {
+			expect(() => {
+				runAction(BASE_FILE, newFile, tolerance, mode);
+			}).toThrow();
+			return;
+		}
+		const { passed, output } = runAction(
+			BASE_FILE,
+			path.join(FIXTURES_FOLDER, newFile),
 			tolerance,
 			mode,
-			expectedPass,
+		);
+		expect(passed).toBe(expectedPass);
+		expect(output.replace(new RegExp(FIXTURES_FOLDER, "g"), "FIXTURES")).toBe(
 			expectedOutput,
-			expectError,
-		}: Case) => {
-			if (expectError) {
-				expect(() => {
-					runAction(BASE_FILE, newFile, tolerance, mode);
-				}).toThrow();
-				return;
-			}
-			const { passed, output } = runAction(
-				BASE_FILE,
-				path.join(FIXTURES_FOLDER, newFile),
-				tolerance,
-				mode,
-			);
-			expect(passed).toBe(expectedPass);
-			expect(output.replace(new RegExp(FIXTURES_FOLDER, "g"), "FIXTURES")).toBe(
-				expectedOutput,
-			);
-		},
-	);
+		);
+	});
 });
 
 // TODO: missing tests for notifications?

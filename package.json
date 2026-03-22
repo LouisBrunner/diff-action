@@ -1,39 +1,43 @@
 {
-	"name": "diff-action",
-	"version": "1.0.0",
-	"private": true,
-	"description": "GitHub Action that compares two files, add tolerances, send notifications, etc",
-	"main": "lib/main.js",
-	"scripts": {
-		"build": "tsc",
-		"pack": "ncc build -m",
-		"test": "jest",
-		"typecheck": "tsc --noEmit",
-		"format:fix": "npx @biomejs/biome format --write .",
-		"vet": "npm run typecheck && npx @biomejs/biome check",
-		"all": "npm run vet && npm run build && npm run pack && npm test"
+	"author": "Louis Brunner",
+	"dependencies": {
+		"@actions/core": "^3.0.0",
+		"@actions/github": "^9.0.0",
+		"diff": "^8.0.3"
 	},
+	"description": "GitHub Action that compares two files, add tolerances, send notifications, etc",
+	"devDependencies": {
+		"@biomejs/biome": "2.4.8",
+		"@types/diff": "^8.0.0",
+		"@types/node": "^25.5.0",
+		"typescript": "^5.9.3"
+	},
+	"funding": {
+		"type": "individual",
+		"url": "https://github.com/sponsors/LouisBrunner"
+	},
+	"keywords": [
+		"github",
+		"actions",
+		"diff"
+	],
+	"license": "MIT",
+	"main": "lib/main.js",
+	"name": "diff-action",
+	"private": true,
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/LouisBrunner/diff-action.git"
 	},
-	"keywords": ["github", "actions", "diff"],
-	"author": "Louis Brunner",
-	"license": "MIT",
-	"dependencies": {
-		"@actions/core": "^1.11.1",
-		"@actions/github": "^6.0.1",
-		"diff": "^8.0.3"
+	"scripts": {
+		"all": "bun run vet && bun run build && bun run pack && bun run test",
+		"build": "tsc",
+		"format:fix": "bunx @biomejs/biome format --write .",
+		"pack": "bun build src/main.ts --outfile dist/index.js --target node --production",
+		"test": "bun test",
+		"typecheck": "tsc --noEmit",
+		"vet": "bun run typecheck && bunx @biomejs/biome check"
 	},
-	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
-		"@types/diff": "^5.2.3",
-		"@types/jest": "^29.5.14",
-		"@types/node": "^22.15.29",
-		"@vercel/ncc": "^0.38.4",
-		"jest": "^29.7.0",
-		"jest-circus": "^29.7.0",
-		"ts-jest": "^29.4.6",
-		"typescript": "^5.9.3"
-	}
+	"type": "module",
+	"version": "1.0.0"
 }

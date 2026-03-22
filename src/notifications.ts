@@ -1,7 +1,9 @@
-import type { Context } from "@actions/github/lib/context";
+import type { context } from "@actions/github";
 import type { GitHub } from "@actions/github/lib/utils";
 import type { Notifications } from "./inputs";
 import type { Result } from "./processing";
+
+type Context = typeof context;
 
 const formatDate = (): string => {
 	return new Date().toISOString();
@@ -30,20 +32,21 @@ export const createRun = async (
 	label?: string,
 ): Promise<void> => {
 	const title = getTitle(label);
+	const now = formatDate();
 	await octokit.rest.checks.create({
-		owner: context.repo.owner,
-		repo: context.repo.repo,
-		head_sha: context.sha,
-		status: "completed",
+		completed_at: now,
 		conclusion: result.passed ? "success" : "failure",
+		head_sha: context.sha,
 		name: title,
-		started_at: formatDate(),
-		completed_at: formatDate(),
 		output: {
-			title,
 			summary: result.summary,
 			text: result.output,
+			title,
 		},
+		owner: context.repo.owner,
+		repo: context.repo.repo,
+		started_at: now,
+		status: "completed",
 	});
 };
 
@@ -69,10 +72,10 @@ export const createComment = async (
 	label?: string,
 ): Promise<void> => {
 	await octokit.rest.issues.createComment({
+		body: commentBody(label, result),
+		issue_number: context.issue.number,
 		owner: context.repo.owner,
 		repo: context.repo.repo,
-		issue_number: context.issue.number,
-		body: commentBody(label, result),
 	});
 };
 
@@ -84,10 +87,10 @@ const updateComment = async (
 	label?: string,
 ): Promise<void> => {
 	await octokit.rest.issues.updateComment({
+		body: commentBody(label, result),
+		comment_id: comment_id,
 		owner: context.repo.owner,
 		repo: context.repo.repo,
-		comment_id: comment_id,
-		body: commentBody(label, result),
 	});
 };
 
@@ -103,9 +106,9 @@ const findComment = async (
 	for await (const entry of octokit.paginate.iterator(
 		octokit.rest.issues.listComments,
 		{
+			issue_number: context.issue.number,
 			owner: context.repo.owner,
 			repo: context.repo.repo,
-			issue_number: context.issue.number,
 		},
 	)) {
 		for (const comment of entry.data) {

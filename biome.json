@@ -1,7 +1,24 @@
 {
-	"$schema": "https://biomejs.dev/schemas/1.8.1/schema.json",
-	"organizeImports": {
+	"$schema": "https://biomejs.dev/schemas/2.4.8/schema.json",
+	"assist": {
+		"actions": {
+			"source": {
+				"organizeImports": "on",
+				"recommended": true,
+				"useSortedAttributes": "on",
+				"useSortedInterfaceMembers": "on",
+				"useSortedKeys": "on",
+				"useSortedProperties": "on"
+			}
+		},
 		"enabled": true
+	},
+	"files": {
+		"includes": ["**", "!**/dist/index.js"]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab"
 	},
 	"linter": {
 		"enabled": true,
@@ -9,7 +26,9 @@
 			"recommended": true
 		}
 	},
-	"files": {
-		"ignore": ["dist/index.js", "lib"]
+	"vcs": {
+		"clientKind": "git",
+		"enabled": true,
+		"useIgnoreFile": true
 	}
 }
