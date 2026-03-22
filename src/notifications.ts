@@ -1,7 +1,9 @@
-import type { Context } from "@actions/github/lib/context";
+import type { context } from "@actions/github";
 import type { GitHub } from "@actions/github/lib/utils";
 import type { Notifications } from "./inputs";
 import type { Result } from "./processing";
+
+type Context = typeof context;
 
 const formatDate = (): string => {
 	return new Date().toISOString();
