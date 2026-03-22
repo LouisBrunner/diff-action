@@ -32,8 +32,9 @@ export const createRun = async (
 	label?: string,
 ): Promise<void> => {
 	const title = getTitle(label);
+	const now = formatDate();
 	await octokit.rest.checks.create({
-		completed_at: formatDate(),
+		completed_at: now,
 		conclusion: result.passed ? "success" : "failure",
 		head_sha: context.sha,
 		name: title,
@@ -44,7 +45,7 @@ export const createRun = async (
 		},
 		owner: context.repo.owner,
 		repo: context.repo.repo,
-		started_at: formatDate(),
+		started_at: now,
 		status: "completed",
 	});
 };
