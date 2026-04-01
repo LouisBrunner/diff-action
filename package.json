@@ -3,11 +3,11 @@
 	"dependencies": {
 		"@actions/core": "^3.0.0",
 		"@actions/github": "^9.0.0",
-		"diff": "^8.0.3"
+		"diff": "^8.0.4"
 	},
 	"description": "GitHub Action that compares two files, add tolerances, send notifications, etc",
 	"devDependencies": {
-		"@biomejs/biome": "2.4.8",
+		"@biomejs/biome": "2.4.10",
 		"@types/diff": "^8.0.0",
 		"@types/node": "^25.5.0",
 		"typescript": "^5.9.3"
