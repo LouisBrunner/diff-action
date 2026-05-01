@@ -1,16 +1,16 @@
 {
 	"author": "Louis Brunner",
 	"dependencies": {
-		"@actions/core": "^3.0.0",
-		"@actions/github": "^9.0.0",
+		"@actions/core": "^3.0.1",
+		"@actions/github": "^9.1.1",
 		"diff": "^8.0.4"
 	},
 	"description": "GitHub Action that compares two files, add tolerances, send notifications, etc",
 	"devDependencies": {
-		"@biomejs/biome": "2.4.10",
+		"@biomejs/biome": "2.4.13",
 		"@types/diff": "^8.0.0",
-		"@types/node": "^25.5.0",
-		"typescript": "^6.0.2"
+		"@types/node": "^25.6.0",
+		"typescript": "^6.0.3"
 	},
 	"funding": {
 		"type": "individual",
