@@ -36,7 +36,8 @@
 		"pack": "bun build src/main.ts --outfile dist/index.js --target node --production",
 		"test": "bun test",
 		"typecheck": "tsc --noEmit",
-		"vet": "bun run typecheck && bunx @biomejs/biome check"
+		"vet": "bun run typecheck && bunx @biomejs/biome check",
+		"vet:ci": "bun run typecheck && bunx @biomejs/biome ci"
 	},
 	"type": "module",
 	"version": "1.0.0"
