@@ -7,7 +7,7 @@
 	},
 	"description": "GitHub Action that compares two files, add tolerances, send notifications, etc",
 	"devDependencies": {
-		"@biomejs/biome": "2.5.1",
+		"@biomejs/biome": "2.5.2",
 		"@types/diff": "^8.0.0",
 		"@types/node": "^25.9.1",
 		"typescript": "^6.0.3"
