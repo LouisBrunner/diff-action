@@ -96,7 +96,7 @@ Possible values:
 
 ### `sticky_comment`
 
-_Optional_ When using `notify_issue: true`, will edit the created comment instead of creating a new one everytime.
+_Optional_ When using `notify_issue: true`, will edit the created comment instead of creating a new one every time.
 
 Note that the updated comment is based on the `title`. Thus:
 

@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
 name: "Smart Diff"
 description: "Perform a diff between two files given a tolerance and send notifications"
 author: "Louis Brunner"
@@ -30,7 +31,7 @@ inputs:
     description: "send a notification to the linked issue/pullrequest with the output"
     required: false
   sticky_comment:
-    description: "will edit the created comment instead of creating a new one everytime"
+    description: "will edit the created comment instead of creating a new one every time"
     required: false
   notify_check:
     description: "create a check run with the output"

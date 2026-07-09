@@ -1,4 +1,5 @@
 {
+	"$schema": "https://json.schemastore.org/package.json",
 	"author": "Louis Brunner",
 	"dependencies": {
 		"@actions/core": "^3.0.1",
@@ -24,6 +25,9 @@
 	"license": "MIT",
 	"main": "lib/main.js",
 	"name": "diff-action",
+	"overrides": {
+		"undici": "^6.27.0"
+	},
 	"private": true,
 	"repository": {
 		"type": "git",

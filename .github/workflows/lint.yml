@@ -1,3 +1,4 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
 name: Lint
 
 on:
@@ -9,11 +10,20 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+permissions: {}
+
 jobs:
-  configs:
-    uses: LouisBrunner/.github/.github/workflows/lint-configs.yml@main
+  lint:
+    uses: LouisBrunner/.github/.github/workflows/lint-all.yml@main
+    permissions:
+      actions: read
+      contents: read
+      statuses: write
+      pull-requests: write
 
   test:
     uses: LouisBrunner/.github/.github/workflows/lint-bun.yml@main
+    permissions:
+      contents: read
     with:
       run: bun run all
