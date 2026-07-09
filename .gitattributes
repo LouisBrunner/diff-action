@@ -1,2 +1,2 @@
-package-lock.json -diff
+bun.lock linguist-generated text -diff
 dist/index.js -diff
