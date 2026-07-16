@@ -211,34 +211,31 @@ describe("run action", () => {
 		return rcases;
 	})();
 
-	test.each(cases)(
-		"with $name",
-		({
-			newFile,
+	test.each(cases)("with $name", ({
+		newFile,
+		tolerance,
+		mode,
+		expectedPass,
+		expectedOutput,
+		expectError,
+	}: Case) => {
+		if (expectError) {
+			expect(() => {
+				runAction(BASE_FILE, newFile, tolerance, mode);
+			}).toThrow();
+			return;
+		}
+		const { passed, output } = runAction(
+			BASE_FILE,
+			join(FIXTURES_FOLDER, newFile),
 			tolerance,
 			mode,
-			expectedPass,
+		);
+		expect(passed).toBe(expectedPass);
+		expect(output.replace(new RegExp(FIXTURES_FOLDER, "g"), "FIXTURES")).toBe(
 			expectedOutput,
-			expectError,
-		}: Case) => {
-			if (expectError) {
-				expect(() => {
-					runAction(BASE_FILE, newFile, tolerance, mode);
-				}).toThrow();
-				return;
-			}
-			const { passed, output } = runAction(
-				BASE_FILE,
-				join(FIXTURES_FOLDER, newFile),
-				tolerance,
-				mode,
-			);
-			expect(passed).toBe(expectedPass);
-			expect(output.replace(new RegExp(FIXTURES_FOLDER, "g"), "FIXTURES")).toBe(
-				expectedOutput,
-			);
-		},
-	);
+		);
+	});
 });
 
 // TODO: missing tests for notifications?
