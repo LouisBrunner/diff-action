@@ -1,10 +1,11 @@
-import * as cp from "node:child_process";
-import * as path from "node:path";
-import * as process from "node:process";
+import { describe, expect, test } from "bun:test";
+import { type ExecSyncOptions, spawnSync } from "node:child_process";
+import { join } from "node:path";
+import { env } from "node:process";
 
 // Configuration
-const FIXTURES_FOLDER = path.join(__dirname, "..", "fixtures");
-const BASE_FILE = path.join(FIXTURES_FOLDER, "file1_basic.txt");
+const FIXTURES_FOLDER = join(import.meta.dirname, "..", "fixtures");
+const BASE_FILE = join(FIXTURES_FOLDER, "file1_basic.txt");
 const MODES = ["strict", "addition", "deletion"] as const;
 type Mode = (typeof MODES)[number];
 const TOLERANCES = [
@@ -16,9 +17,8 @@ const TOLERANCES = [
 	"worse",
 ] as const;
 type Tolerance = (typeof TOLERANCES)[number];
-const getToleranceWeight = (tolerance: Tolerance): number => {
-	return TOLERANCES.indexOf(tolerance);
-};
+const getToleranceWeight = (tolerance: Tolerance): number =>
+	TOLERANCES.indexOf(tolerance);
 type TestFile = {
 	path: string;
 	diff: string;
@@ -117,19 +117,17 @@ describe("run action", () => {
 		tolerance: Tolerance,
 		mode: Mode,
 	): ActionOutputs => {
-		process.env.INPUT_OLD = oldFile;
-		process.env.INPUT_NEW = newFile;
-		process.env.INPUT_TOLERANCE = tolerance.toString();
-		process.env.INPUT_MODE = mode.toString();
-		process.env.GITHUB_OUTPUT = "";
-		const main = path.join(__dirname, "..", "dist", "index.js");
-		const options: cp.ExecSyncOptions = {
-			env: process.env,
+		env.INPUT_OLD = oldFile;
+		env.INPUT_NEW = newFile;
+		env.INPUT_TOLERANCE = tolerance.toString();
+		env.INPUT_MODE = mode.toString();
+		env.GITHUB_OUTPUT = "";
+		const main = join(import.meta.dirname, "..", "dist", "index.js");
+		const options: ExecSyncOptions = {
+			env,
 		};
 		try {
-			const actionOutput = cp
-				.spawnSync("node", [main], options)
-				.output.toString();
+			const actionOutput = spawnSync("node", [main], options).output.toString();
 			return parseOutput(actionOutput);
 		} catch (e) {
 			const error = e as Error & { stdout: Buffer | string };
@@ -143,6 +141,7 @@ describe("run action", () => {
 			}
 			throw new Error(
 				`Action failed with error: ${error.message} and output: ${error.stdout.toString()}`,
+				{ cause: e },
 			);
 		}
 	};
@@ -157,8 +156,9 @@ describe("run action", () => {
 		expectError?: boolean;
 	};
 
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: nope
 	const cases = ((): Case[] => {
-		const cases: Case[] = [
+		const rcases: Case[] = [
 			{
 				expectError: true,
 				mode: "strict",
@@ -194,47 +194,50 @@ describe("run action", () => {
 					if (expectError) {
 						result = "an error";
 					}
-					cases.push({
+					rcases.push({
 						expectError,
 						expectedOutput: file.diff,
 						expectedPass,
-						mode: mode,
+						mode,
 						name: `file ${file.path}, mode ${mode}, tolerance ${tolerance} and expecting ${result}`,
 						newFile: file.path,
-						tolerance: tolerance,
+						tolerance,
 					});
 				}
 			}
 		}
 
-		return cases;
+		return rcases;
 	})();
 
-	test.each(cases)("with $name", ({
-		newFile,
-		tolerance,
-		mode,
-		expectedPass,
-		expectedOutput,
-		expectError,
-	}: Case) => {
-		if (expectError) {
-			expect(() => {
-				runAction(BASE_FILE, newFile, tolerance, mode);
-			}).toThrow();
-			return;
-		}
-		const { passed, output } = runAction(
-			BASE_FILE,
-			path.join(FIXTURES_FOLDER, newFile),
+	test.each(cases)(
+		"with $name",
+		({
+			newFile,
 			tolerance,
 			mode,
-		);
-		expect(passed).toBe(expectedPass);
-		expect(output.replace(new RegExp(FIXTURES_FOLDER, "g"), "FIXTURES")).toBe(
+			expectedPass,
 			expectedOutput,
-		);
-	});
+			expectError,
+		}: Case) => {
+			if (expectError) {
+				expect(() => {
+					runAction(BASE_FILE, newFile, tolerance, mode);
+				}).toThrow();
+				return;
+			}
+			const { passed, output } = runAction(
+				BASE_FILE,
+				join(FIXTURES_FOLDER, newFile),
+				tolerance,
+				mode,
+			);
+			expect(passed).toBe(expectedPass);
+			expect(output.replace(new RegExp(FIXTURES_FOLDER, "g"), "FIXTURES")).toBe(
+				expectedOutput,
+			);
+		},
+	);
 });
 
 // TODO: missing tests for notifications?

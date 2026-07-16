@@ -1,16 +1,32 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig.json",
 	"compilerOptions": {
+		"allowImportingTsExtensions": true,
+		"allowJs": false,
 		"alwaysStrict": true,
 		"esModuleInterop": true,
+		"forceConsistentCasingInFileNames": true,
+		"isolatedModules": true,
 		"module": "ES2022",
 		"moduleResolution": "bundler",
 		"noImplicitAny": true,
+		"noImplicitOverride": true,
+		"noImplicitThis": true,
+		"noPropertyAccessFromIndexSignature": true,
+		"noUncheckedIndexedAccess": true,
 		"outDir": "./lib",
+		"preserveConstEnums": true,
+		"resolveJsonModule": true,
+		"rewriteRelativeImportExtensions": true,
 		"rootDir": "./src",
 		"strict": true,
+		"strictBindCallApply": true,
+		"strictBuiltinIteratorReturn": true,
+		"strictFunctionTypes": true,
+		"strictNullChecks": true,
+		"strictPropertyInitialization": true,
 		"target": "es2022",
-		"types": ["node"]
+		"types": ["bun"]
 	},
 	"exclude": ["node_modules", "**/*.test.ts"]
 }

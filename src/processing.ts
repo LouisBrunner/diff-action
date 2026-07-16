@@ -1,6 +1,7 @@
 import fs from "node:fs";
+// biome-ignore lint/correctness/noUnresolvedImports: broken
 import { createTwoFilesPatch, diffLines } from "diff";
-import { Mode, Tolerance } from "./inputs";
+import { Mode, Tolerance } from "./inputs.ts";
 
 export type Result = {
 	result: Tolerance;
@@ -20,9 +21,8 @@ const levels: ToleranceLevelMap = {
 	[Tolerance.Worse]: -3,
 };
 
-const compareTolerance = (expected: Tolerance, result: Tolerance): boolean => {
-	return levels[result] >= levels[expected];
-};
+const compareTolerance = (expected: Tolerance, result: Tolerance): boolean =>
+	levels[result] >= levels[expected];
 
 const getSummary = (
 	passed: boolean,
@@ -39,6 +39,7 @@ const calculateResult = (
 	counts: { added: number; removed: number },
 	mode: Mode,
 	expected: Tolerance,
+	// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: shhh, it's ok
 ): { result: Tolerance; passed: boolean } => {
 	if (mode === Mode.Strict) {
 		if (counts.removed === 0 && counts.added === 0) {

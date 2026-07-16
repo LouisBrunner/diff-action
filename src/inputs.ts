@@ -1,3 +1,4 @@
+/** biome-ignore-all lint/style/useNamingConvention: GH Names */
 import type { InputOptions } from "@actions/core";
 
 export type Notifications = {
@@ -58,30 +59,30 @@ export const parseInputs = (getInput: GetInput): Args => {
 	}
 
 	let notifications: Notifications | undefined;
-	const notify_check = getInput("notify_check");
-	const notify_issue = getInput("notify_issue");
-	if (notify_check || notify_issue) {
-		const sticky_comment = getInput("sticky_comment");
+	const notifyCheck = getInput("notify_check");
+	const notifyIssue = getInput("notify_issue");
+	if (notifyCheck || notifyIssue) {
+		const stickyComment = getInput("sticky_comment");
 		const label = getInput("title");
 		const token = getInput("token", { required: true });
-		let comment_on: Notifications["comment_on"] = false;
-		switch (notify_issue) {
+		let commentOn: Notifications["comment_on"] = false;
+		switch (notifyIssue) {
 			case "true":
 			case "always":
-				comment_on = "always";
+				commentOn = "always";
 				break;
 			case "failure":
-				comment_on = "failure";
+				commentOn = "failure";
 				break;
 			case "success":
-				comment_on = "success";
+				commentOn = "success";
 				break;
 		}
 		notifications = {
-			add_check: notify_check === "true",
-			comment_on,
+			add_check: notifyCheck === "true",
+			comment_on: commentOn,
 			label,
-			sticky_comment: sticky_comment === "true",
+			sticky_comment: stickyComment === "true",
 			token,
 		};
 	}

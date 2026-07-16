@@ -1,13 +1,12 @@
-import type { context } from "@actions/github";
+/** biome-ignore-all lint/style/useNamingConvention: GH names */
+import type { context as ctx } from "@actions/github";
 import type { GitHub } from "@actions/github/lib/utils";
-import type { Notifications } from "./inputs";
-import type { Result } from "./processing";
+import type { Notifications } from "./inputs.ts";
+import type { Result } from "./processing.ts";
 
-type Context = typeof context;
+type Context = typeof ctx;
 
-const formatDate = (): string => {
-	return new Date().toISOString();
-};
+const formatDate = (): string => new Date().toISOString();
 
 const getTitle = (label?: string): string => {
 	const more = label ? ` (${label})` : "";
@@ -15,15 +14,12 @@ const getTitle = (label?: string): string => {
 };
 
 export const shouldComment = (
-	comment_on: Notifications["comment_on"],
+	commentOn: Notifications["comment_on"],
 	passed: boolean,
-): boolean => {
-	return (
-		comment_on === "always" ||
-		(comment_on === "success" && passed) ||
-		(comment_on === "failure" && !passed)
-	);
-};
+): boolean =>
+	commentOn === "always" ||
+	(commentOn === "success" && passed) ||
+	(commentOn === "failure" && !passed);
 
 export const createRun = async (
 	octokit: InstanceType<typeof GitHub>,
@@ -50,12 +46,13 @@ export const createRun = async (
 	});
 };
 
-const commentLocator = (label?: string): string => {
-	return `<!-- Diff Action / Pull Request Comment / ${label ?? ""} -->`;
-};
+const commentLocator = (label?: string): string =>
+	`<!-- Diff Action / Pull Request Comment / ${label ?? ""} -->`;
 
-const commentBody = (label: string | undefined, result: Result): string => {
-	return `## ${getTitle(label)}: ${result.passed ? "Success" : "Failure"}
+const commentBody = (
+	label: string | undefined,
+	result: Result,
+): string => `## ${getTitle(label)}: ${result.passed ? "Success" : "Failure"}
 ${result.summary}
 
 \`\`\`
@@ -63,7 +60,6 @@ ${result.output}
 \`\`\`
 
 ${commentLocator(label)}`;
-};
 
 export const createComment = async (
 	octokit: InstanceType<typeof GitHub>,
@@ -82,13 +78,13 @@ export const createComment = async (
 const updateComment = async (
 	octokit: InstanceType<typeof GitHub>,
 	context: Context,
-	comment_id: number,
+	commentId: number,
 	result: Result,
 	label?: string,
 ): Promise<void> => {
 	await octokit.rest.issues.updateComment({
 		body: commentBody(label, result),
-		comment_id: comment_id,
+		comment_id: commentId,
 		owner: context.repo.owner,
 		repo: context.repo.repo,
 	});
@@ -128,10 +124,10 @@ export const upsertComment = async (
 	result: Result,
 	label?: string,
 ): Promise<void> => {
-	const comment_id = await findComment(octokit, context, label);
-	if (comment_id !== undefined) {
-		await updateComment(octokit, context, comment_id, result, label);
-	} else {
+	const commentId = await findComment(octokit, context, label);
+	if (commentId === undefined) {
 		await createComment(octokit, context, result, label);
+	} else {
+		await updateComment(octokit, context, commentId, result, label);
 	}
 };
