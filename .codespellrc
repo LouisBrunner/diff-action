@@ -1,2 +1,2 @@
 [codespell]
-skip = *dist/*,*bun.lock
+skip = *dist/*,*bun.lock,*biome.jsonc

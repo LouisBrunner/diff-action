@@ -1,3 +1,4 @@
+// biome-ignore lint/correctness/noUnresolvedImports: bun:test is a Bun built-in Biome doesn't resolve
 import { describe, expect, test } from "bun:test";
 import { type ExecSyncOptions, spawnSync } from "node:child_process";
 import { join } from "node:path";
