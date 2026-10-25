@@ -8,7 +8,7 @@
 	},
 	"description": "GitHub Action that compares two files, add tolerances, send notifications, etc",
 	"devDependencies": {
-		"@biomejs/biome": "2.5.11",
+		"@biomejs/biome": "2.5.12",
 		"@types/diff": "^8.0.0",
 		"@types/node": "^26.4.0",
 		"typescript": "^7.0.2"
@@ -26,7 +26,7 @@
 	"main": "lib/main.js",
 	"name": "diff-action",
 	"overrides": {
-		"undici": "^6.27.0"
+		"undici": "^6.28.0"
 	},
 	"private": true,
 	"repository": {

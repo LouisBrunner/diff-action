@@ -1,4 +1,3 @@
-// biome-ignore lint/correctness/noUnresolvedImports: bun:test is a Bun built-in Biome doesn't resolve
 import { describe, expect, test } from "bun:test";
 import { type ExecSyncOptions, spawnSync } from "node:child_process";
 import { join } from "node:path";
@@ -211,31 +210,34 @@ describe("run action", () => {
 		return rcases;
 	})();
 
-	test.each(cases)("with $name", ({
-		newFile,
-		tolerance,
-		mode,
-		expectedPass,
-		expectedOutput,
-		expectError,
-	}: Case) => {
-		if (expectError) {
-			expect(() => {
-				runAction(BASE_FILE, newFile, tolerance, mode);
-			}).toThrow();
-			return;
-		}
-		const { passed, output } = runAction(
-			BASE_FILE,
-			join(FIXTURES_FOLDER, newFile),
+	test.each(cases)(
+		"with $name",
+		({
+			newFile,
 			tolerance,
 			mode,
-		);
-		expect(passed).toBe(expectedPass);
-		expect(output.replace(new RegExp(FIXTURES_FOLDER, "g"), "FIXTURES")).toBe(
+			expectedPass,
 			expectedOutput,
-		);
-	});
+			expectError,
+		}: Case) => {
+			if (expectError) {
+				expect(() => {
+					runAction(BASE_FILE, newFile, tolerance, mode);
+				}).toThrow();
+				return;
+			}
+			const { passed, output } = runAction(
+				BASE_FILE,
+				join(FIXTURES_FOLDER, newFile),
+				tolerance,
+				mode,
+			);
+			expect(passed).toBe(expectedPass);
+			expect(output.replace(new RegExp(FIXTURES_FOLDER, "g"), "FIXTURES")).toBe(
+				expectedOutput,
+			);
+		},
+	);
 });
 
 // TODO: missing tests for notifications?
